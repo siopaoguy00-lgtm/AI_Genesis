@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Institutional User Guide | AI Genesis</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { font-family: 'Inter', sans-serif; }
+html { scroll-behavior: smooth; }
+body { scroll-padding-top: 2rem; overflow-x: hidden; }
+#ug-main { overflow-x: hidden; }
+.ui, .app-shell { max-width: 100%; }
+code { font-family: 'Courier New', monospace; font-size: 0.82em; background: #f1f5f9; padding: 0.15em 0.45em; border-radius: 0.375rem; color: #7c3aed; }
+.nav-link { transition: all 0.15s; border-left: 3px solid transparent; }
+.nav-link:hover { background: rgba(255,255,255,0.08); border-left-color: rgba(255,255,255,0.3); color:#fff; }
+.nav-link.active { background: rgba(124,58,237,0.22); border-left-color: #7c3aed; color: #e9d5ff; font-weight: 600; }
+/* App-accurate UI mockups */
+.ui { border-radius: 1rem; overflow: hidden; box-shadow: 0 8px 30px rgba(2,6,23,0.10); border: 1px solid #e2e8f0; }
+.ui-bar { background: linear-gradient(135deg,#0f172a,#1e293b); padding: .6rem .9rem; display:flex; align-items:center; gap:.5rem; }
+.ui-dot { width:9px; height:9px; border-radius:50%; }
+.ui-title { color:#cbd5e1; font-size:.68rem; font-weight:700; margin-left:.4rem; letter-spacing:.03em; }
+.ui-body { background:#f8fafc; padding: 1rem; }
+/* App sidebar mock */
+.app-shell { display:flex; background:#0b1220; }
+.app-side { width: 168px; background: linear-gradient(180deg,#0f172a,#111827); padding:.75rem .5rem; flex-shrink:0; }
+.app-side .brand { display:flex; align-items:center; gap:.4rem; padding:.35rem .5rem .7rem; border-bottom:1px solid rgba(255,255,255,.06); margin-bottom:.5rem; }
+.app-item { display:flex; align-items:center; gap:.55rem; padding:.5rem .55rem; border-radius:.7rem; color:#94a3b8; font-size:.7rem; font-weight:600; margin-bottom:.15rem; }
+.app-item i { width:1rem; text-align:center; font-size:.72rem; }
+.app-item.on { background: rgba(124,58,237,.22); color:#e9d5ff; }
+.app-main { flex:1; background:#f1f5f9; padding: .9rem; min-width:0; }
+.app-h { display:flex; align-items:center; justify-content:space-between; margin-bottom:.75rem; }
+.chip { display:inline-flex; align-items:center; gap:.3rem; padding:.25rem .6rem; border-radius:.6rem; font-size:.62rem; font-weight:700; }
+.card { background:#fff; border:1px solid #e5e7eb; border-radius:.85rem; padding:.7rem .8rem; }
+.btnv { background:#7c3aed; color:#fff; border-radius:.6rem; padding:.4rem .7rem; font-size:.66rem; font-weight:700; display:inline-flex; gap:.35rem; align-items:center; }
+.btng { background:#059669; color:#fff; border-radius:.6rem; padding:.4rem .7rem; font-size:.66rem; font-weight:700; display:inline-flex; gap:.35rem; align-items:center; }
+.trow { display:grid; align-items:center; padding:.5rem .6rem; border-bottom:1px solid #f1f5f9; font-size:.66rem; color:#334155; }
+.feature-pill { display:inline-flex; align-items:center; gap:.375rem; padding:.375rem .75rem; border-radius:.75rem; font-size:.6875rem; font-weight:600; }
+.step { counter-increment: step; position:relative; padding-left: 2.6rem; }
+.step::before { content: counter(step); position:absolute; left:0; top:0; display:inline-flex; align-items:center; justify-content:center; width:1.9rem; height:1.9rem; background:#7c3aed; color:#fff; border-radius:50%; font-size:.8rem; font-weight:800; }
+.steps { counter-reset: step; }
+.tag { font-size:.6rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; padding:.2rem .5rem; border-radius:.4rem; }
+@media (max-width: 640px) {
+    .app-side { width: 120px; }
+    .app-item { font-size: .62rem; padding: .4rem .4rem; }
+    .app-item span, .app-side .brand span { font-size: .6rem; }
+}
+@media (max-width: 1023px) {
+    #ug-sidebar { transform: translateX(-100%); }
+    #ug-sidebar.open { transform: translateX(0); }
+    #ug-main { margin-left: 0 !important; }
+    #ug-overlay.show { display:block; }
+}
+@media print { #ug-sidebar, #ug-mobile-btn, #ug-overlay { display: none !important; } #ug-main { margin-left: 0 !important; } }
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius: 9px; }
+#ug-sidebar::-webkit-scrollbar-thumb { background:#334155; }
+</style>
+</head>
+<body class="bg-white text-slate-800">
+
+<!-- Mobile menu button -->
+<button id="ug-mobile-btn" onclick="ugToggle()" class="lg:hidden fixed top-4 left-4 z-50 h-11 w-11 rounded-2xl bg-slate-900 text-white flex items-center justify-center shadow-lg active:scale-90 transition">
+    <i class="fa-solid fa-bars"></i>
+</button>
+<div id="ug-overlay" onclick="ugToggle()" class="lg:hidden fixed inset-0 bg-black/40 z-30 hidden"></div>
+
+<!-- Sidebar -->
+<aside id="ug-sidebar" class="fixed top-0 left-0 h-full w-64 bg-slate-900 text-white overflow-y-auto z-40 pt-6 pb-24 transition-transform duration-200">
+    <div class="px-5 mb-5">
+        <div class="flex items-center gap-2.5 mb-1">
+            <div class="h-9 w-9 rounded-xl bg-violet-600 flex items-center justify-center"><i class="fa-solid fa-book-open text-white text-sm"></i></div>
+            <h2 class="text-base font-black tracking-tight">User Guide</h2>
+        </div>
+        <p class="text-[10px] text-slate-400 uppercase tracking-widest">AI Genesis · for Institutions</p>
+    </div>
+    <nav class="px-3 space-y-0.5" id="ug-nav">
+        <a href="#welcome" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Welcome</a>
+        <a href="#getting-started" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Getting Started &amp; Login</a>
+        <a href="#roles" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Account Types</a>
+        <a href="#subscription" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Subscription &amp; AI Credits</a>
+
+        <p class="px-3 pt-5 pb-1 text-[9px] font-black uppercase tracking-widest text-slate-500"><i class="fa-solid fa-user-tie mr-1.5"></i>Staff</p>
+        <a href="#staff-dashboard" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Staff Console</a>
+        <a href="#staff-accounts" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Manage Accounts</a>
+        <a href="#staff-instances" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Course Instances</a>
+        <a href="#staff-enrollments" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Enrollments</a>
+        <a href="#staff-teachers" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Teacher Assignments</a>
+        <a href="#staff-apikeys" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">API Keys</a>
+
+        <p class="px-3 pt-5 pb-1 text-[9px] font-black uppercase tracking-widest text-slate-500"><i class="fa-solid fa-pen-ruler mr-1.5"></i>Content Builder (Developer)</p>
+        <a href="#dev-courses" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Building Courses</a>
+        <a href="#dev-modules" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Modules &amp; Lessons</a>
+        <a href="#dev-ai" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">AI Content &amp; Credits</a>
+        <a href="#dev-exams" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Exams &amp; Assessments</a>
+        <a href="#dev-slides" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Slide Decks</a>
+
+        <p class="px-3 pt-5 pb-1 text-[9px] font-black uppercase tracking-widest text-slate-500"><i class="fa-solid fa-file-contract mr-1.5"></i>Competency Tools</p>
+        <a href="#cs-generator" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">CS Generator</a>
+        <a href="#cbc-generator" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">CBC Generator</a>
+
+        <p class="px-3 pt-5 pb-1 text-[9px] font-black uppercase tracking-widest text-slate-500"><i class="fa-solid fa-code mr-1.5"></i>Developer Portal / API</p>
+        <a href="#dev-portal" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">The /developer Page</a>
+        <a href="#api-auth" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Authentication &amp; Scopes</a>
+        <a href="#api-endpoints" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Endpoint Reference</a>
+        <a href="#api-tryit" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Try It &amp; Errors</a>
+
+        <p class="px-3 pt-5 pb-1 text-[9px] font-black uppercase tracking-widest text-slate-500"><i class="fa-solid fa-chalkboard-user mr-1.5"></i>Teacher</p>
+        <a href="#teacher-dashboard" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Teacher Nexus</a>
+        <a href="#teacher-tracker" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Student Tracker</a>
+        <a href="#teacher-grading" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Grading &amp; Review</a>
+
+        <p class="px-3 pt-5 pb-1 text-[9px] font-black uppercase tracking-widest text-slate-500"><i class="fa-solid fa-user-graduate mr-1.5"></i>Student</p>
+        <a href="#student-login" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Logging In</a>
+        <a href="#student-catalog" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Course Catalog</a>
+        <a href="#student-learning" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Learning</a>
+        <a href="#student-assessments" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Assessments</a>
+        <a href="#student-certificates" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Certificates</a>
+
+        <p class="px-3 pt-5 pb-1 text-[9px] font-black uppercase tracking-widest text-slate-500"><i class="fa-solid fa-shield-halved mr-1.5"></i>Platform</p>
+        <a href="#profile" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Your Profile</a>
+        <a href="#security" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">Security &amp; Privacy</a>
+        <a href="#faq" class="nav-link block px-3 py-2 rounded-r-lg text-xs text-slate-300">FAQ</a>
+    </nav>
+</aside>
+
+<!-- Main -->
+<main id="ug-main" class="lg:ml-64 px-5 sm:px-10 py-12 max-w-5xl mx-auto">
+
+<!-- ══════════ WELCOME ══════════ -->
+<section id="welcome" class="mb-16 scroll-mt-8">
+    <div class="relative overflow-hidden rounded-3xl p-8 md:p-14 text-center" style="background: linear-gradient(135deg,#0f172a 0%,#1e3a5f 50%,#312e81 100%);">
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 30% 70%,#6366f1,transparent 50%),radial-gradient(circle at 70% 30%,#3b82f6,transparent 50%);"></div>
+        <div class="relative">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-emerald-400 text-xs font-bold uppercase tracking-widest mb-6">
+                <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span> Institutional User Guide
+            </div>
+            <h1 class="text-3xl md:text-5xl font-black text-white tracking-tight leading-tight mb-4">AI Genesis</h1>
+            <p class="text-sm md:text-base text-slate-300 max-w-2xl mx-auto mb-8">A complete, step-by-step walkthrough for your institution — logging in, managing people, building AI-powered courses, running assessments, and issuing certificates. Every screen shown here matches the live platform.</p>
+            <div class="flex flex-wrap justify-center gap-2.5">
+                <span class="feature-pill bg-white/10 text-white border border-white/20"><i class="fa-solid fa-user-tie text-[10px] text-blue-300"></i> Staff</span>
+                <span class="feature-pill bg-white/10 text-white border border-white/20"><i class="fa-solid fa-pen-ruler text-[10px] text-violet-300"></i> Content Builder</span>
+                <span class="feature-pill bg-white/10 text-white border border-white/20"><i class="fa-solid fa-chalkboard-user text-[10px] text-emerald-300"></i> Teacher</span>
+                <span class="feature-pill bg-white/10 text-white border border-white/20"><i class="fa-solid fa-user-graduate text-[10px] text-amber-300"></i> Student</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-blue-50 rounded-2xl p-5 border border-blue-100">
+            <div class="h-10 w-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mb-3"><i class="fa-solid fa-user-tie"></i></div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1">Staff</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">Run your institution: accounts, course sections, enrollments, teacher assignments, API keys, and competency documents.</p>
+        </div>
+        <div class="bg-violet-50 rounded-2xl p-5 border border-violet-100">
+            <div class="h-10 w-10 rounded-xl bg-violet-100 text-violet-600 flex items-center justify-center mb-3"><i class="fa-solid fa-pen-ruler"></i></div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1">Content Builder</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">The <code>developer</code> role. Builds courses, modules, lessons, exams and slide decks — with AI generation.</p>
+        </div>
+        <div class="bg-emerald-50 rounded-2xl p-5 border border-emerald-100">
+            <div class="h-10 w-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-3"><i class="fa-solid fa-chalkboard-user"></i></div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1">Teacher</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">Track student progress, spot at-risk learners, and review/override AI-graded essays.</p>
+        </div>
+        <div class="bg-amber-50 rounded-2xl p-5 border border-amber-100">
+            <div class="h-10 w-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center mb-3"><i class="fa-solid fa-user-graduate"></i></div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1">Student</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">Browse the catalog, learn, take timed assessments, and download verifiable certificates.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════ GETTING STARTED ══════════ -->
+<section id="getting-started" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-slate-100 text-slate-500">01</span><h2 class="text-2xl font-black text-slate-900">Getting Started &amp; Logging In</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">Everyone at your institution signs in through <b>your institution's own landing page</b> at a web address ending in your institution code — for example <code>your-lms.gov.ph/TVI-MANILA</code>. There is no shared, generic login.</p>
+
+    <div class="grid lg:grid-cols-2 gap-6 items-start">
+        <div class="ui">
+            <div class="ui-bar"><span class="ui-dot bg-red-400"></span><span class="ui-dot bg-amber-400"></span><span class="ui-dot bg-emerald-400"></span><span class="ui-title">your-lms.gov.ph / TVI-MANILA</span></div>
+            <div class="ui-body">
+                <div class="text-center py-2">
+                    <div class="h-12 w-12 rounded-2xl bg-blue-600 text-white mx-auto flex items-center justify-center mb-2"><i class="fa-solid fa-building-columns"></i></div>
+                    <p class="font-black text-slate-900 text-sm">TVI Manila Training Center</p>
+                    <p class="text-[11px] text-slate-400 mb-3">Region IV-A · TVI-MANILA</p>
+                </div>
+                <div class="flex gap-1 bg-slate-100 rounded-xl p-1 mb-3 text-[11px] font-bold">
+                    <div class="flex-1 text-center py-1.5 rounded-lg bg-white shadow-sm text-blue-700">Student</div>
+                    <div class="flex-1 text-center py-1.5 rounded-lg text-slate-500">Staff / Teacher</div>
+                </div>
+                <div class="space-y-2">
+                    <div class="border border-slate-200 rounded-xl px-3 py-2 text-[11px] text-slate-400">Email</div>
+                    <div class="border border-slate-200 rounded-xl px-3 py-2 text-[11px] text-slate-400">Password</div>
+                    <div class="btnv w-full justify-center py-2.5"><i class="fa-solid fa-right-to-bracket"></i> Sign In</div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100 mb-4">
+                <h4 class="font-bold text-slate-900 text-sm mb-3 flex items-center gap-2"><i class="fa-solid fa-circle-info text-blue-500"></i> How login works</h4>
+                <ul class="space-y-2.5 text-xs text-slate-600">
+                    <li class="flex gap-2"><i class="fa-solid fa-check text-emerald-500 mt-0.5"></i> The public home page lists all institutions with a <b>search box</b>. Click your institution (or search by name/code) to open its landing page.</li>
+                    <li class="flex gap-2"><i class="fa-solid fa-check text-emerald-500 mt-0.5"></i> Each landing page has two tabs: <b>Student</b> and <b>Staff / Teacher</b>. Pick the one that matches your account.</li>
+                    <li class="flex gap-2"><i class="fa-solid fa-check text-emerald-500 mt-0.5"></i> The <b>Student</b> tab only accepts student accounts of that institution; the <b>Staff/Teacher</b> tab accepts staff, teacher and content-builder accounts of that institution.</li>
+                    <li class="flex gap-2"><i class="fa-solid fa-check text-emerald-500 mt-0.5"></i> Platform administrators use the small <b>Admin</b> button on the public home page (a separate secure modal).</li>
+                </ul>
+            </div>
+            <div class="bg-amber-50 rounded-2xl p-4 border border-amber-100 text-xs text-amber-800">
+                <b><i class="fa-solid fa-triangle-exclamation mr-1"></i> No self-signup.</b> Accounts are created for you by your institution's Staff. If you can't log in, contact your Staff administrator to confirm your account is active and that you're using the correct tab.
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-6 grid sm:grid-cols-3 gap-4">
+        <div class="bg-white border border-slate-200 rounded-2xl p-4"><div class="text-blue-600 mb-2"><i class="fa-solid fa-lock"></i></div><h5 class="font-bold text-xs text-slate-900 mb-1">Secure session</h5><p class="text-[11px] text-slate-500">Sessions last 24 hours and are protected by a secure, browser-only token — no password is stored in the page.</p></div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-4"><div class="text-blue-600 mb-2"><i class="fa-solid fa-arrow-right-from-bracket"></i></div><h5 class="font-bold text-xs text-slate-900 mb-1">After login</h5><p class="text-[11px] text-slate-500">You land on your role's home screen automatically. The left menu shows only what your role can use.</p></div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-4"><div class="text-blue-600 mb-2"><i class="fa-solid fa-mobile-screen"></i></div><h5 class="font-bold text-xs text-slate-900 mb-1">Any device</h5><p class="text-[11px] text-slate-500">The platform works on desktop, tablet and phone. On mobile, tap the menu icon to open navigation.</p></div>
+    </div>
+</section>
+
+<!-- ══════════ ROLES ══════════ -->
+<section id="roles" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-slate-100 text-slate-500">02</span><h2 class="text-2xl font-black text-slate-900">Account Types &amp; What Each Menu Shows</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">Your institution uses four account types. Each one sees a different left-hand menu — exactly as listed below. (A fifth type, <b>Administrator</b>, belongs to the platform operator, not your institution.)</p>
+
+    <div class="bg-violet-50 border border-violet-100 rounded-2xl p-4 mb-6 text-xs text-violet-900">
+        <b><i class="fa-solid fa-lightbulb mr-1"></i> Note on names:</b> the account type that <b>builds course content</b> is called <b>Developer</b> in the system. Think of it as your <b>Content Builder / Uploader</b> — it is the role that creates and uploads courses, lessons, exams and slides. There is no separate "uploader" account type.
+    </div>
+
+    <div class="space-y-4">
+        <!-- Staff -->
+        <div class="border border-slate-200 rounded-2xl overflow-hidden">
+            <div class="flex items-center gap-3 px-5 py-3 bg-blue-50 border-b border-blue-100">
+                <div class="h-9 w-9 rounded-xl bg-blue-600 text-white flex items-center justify-center"><i class="fa-solid fa-user-tie"></i></div>
+                <div><h3 class="font-black text-slate-900 text-sm">Staff</h3><p class="text-[11px] text-slate-500">Runs the institution day-to-day</p></div>
+            </div>
+            <div class="px-5 py-4 grid md:grid-cols-2 gap-4 items-center">
+                <p class="text-xs text-slate-600 leading-relaxed">Creates and manages all accounts in the institution, sets up course sections (instances), enrolls students, assigns teachers, manages API keys, and can use the CS/CBC competency generators. Sees institution-wide dashboards and subscription usage.</p>
+                <div class="flex flex-wrap gap-1.5">
+                    <span class="chip bg-slate-100 text-slate-600">Staff Console</span><span class="chip bg-slate-100 text-slate-600">Manage Accounts</span><span class="chip bg-slate-100 text-slate-600">Courses</span><span class="chip bg-slate-100 text-slate-600">Course Instances</span><span class="chip bg-slate-100 text-slate-600">Teacher Assignments</span><span class="chip bg-slate-100 text-slate-600">Enrollments</span><span class="chip bg-slate-100 text-slate-600">API Keys</span><span class="chip bg-slate-100 text-slate-600">CS Generator</span><span class="chip bg-slate-100 text-slate-600">CBC Generator</span><span class="chip bg-slate-100 text-slate-600">Profile</span>
+                </div>
+            </div>
+        </div>
+        <!-- Developer -->
+        <div class="border border-slate-200 rounded-2xl overflow-hidden">
+            <div class="flex items-center gap-3 px-5 py-3 bg-violet-50 border-b border-violet-100">
+                <div class="h-9 w-9 rounded-xl bg-violet-600 text-white flex items-center justify-center"><i class="fa-solid fa-pen-ruler"></i></div>
+                <div><h3 class="font-black text-slate-900 text-sm">Content Builder <span class="text-violet-500 font-semibold">(Developer)</span></h3><p class="text-[11px] text-slate-500">Creates &amp; uploads course content</p></div>
+            </div>
+            <div class="px-5 py-4 grid md:grid-cols-2 gap-4 items-center">
+                <p class="text-xs text-slate-600 leading-relaxed">Focused entirely on the <b>Courses</b> workspace: builds courses, modules and lessons (typing or AI-generating), creates exam question banks and assessments, and produces AI slide decks and thumbnails. Sees only Courses and Profile.</p>
+                <div class="flex flex-wrap gap-1.5">
+                    <span class="chip bg-violet-100 text-violet-700">Courses</span><span class="chip bg-slate-100 text-slate-600">Profile</span>
+                </div>
+            </div>
+        </div>
+        <!-- Teacher -->
+        <div class="border border-slate-200 rounded-2xl overflow-hidden">
+            <div class="flex items-center gap-3 px-5 py-3 bg-emerald-50 border-b border-emerald-100">
+                <div class="h-9 w-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center"><i class="fa-solid fa-chalkboard-user"></i></div>
+                <div><h3 class="font-black text-slate-900 text-sm">Teacher</h3><p class="text-[11px] text-slate-500">Guides &amp; assesses learners</p></div>
+            </div>
+            <div class="px-5 py-4 grid md:grid-cols-2 gap-4 items-center">
+                <p class="text-xs text-slate-600 leading-relaxed">Sees only the courses/sections they are assigned to. Monitors each student's module and assessment progress, identifies at-risk learners, and reviews or overrides AI-graded essay/activity/code answers.</p>
+                <div class="flex flex-wrap gap-1.5">
+                    <span class="chip bg-emerald-100 text-emerald-700">Teacher Nexus</span><span class="chip bg-emerald-100 text-emerald-700">Student Tracker</span><span class="chip bg-slate-100 text-slate-600">Profile</span>
+                </div>
+            </div>
+        </div>
+        <!-- Student -->
+        <div class="border border-slate-200 rounded-2xl overflow-hidden">
+            <div class="flex items-center gap-3 px-5 py-3 bg-amber-50 border-b border-amber-100">
+                <div class="h-9 w-9 rounded-xl bg-amber-500 text-white flex items-center justify-center"><i class="fa-solid fa-user-graduate"></i></div>
+                <div><h3 class="font-black text-slate-900 text-sm">Student <span class="text-amber-500 font-semibold">(User)</span></h3><p class="text-[11px] text-slate-500">Learns &amp; earns certificates</p></div>
+            </div>
+            <div class="px-5 py-4 grid md:grid-cols-2 gap-4 items-center">
+                <p class="text-xs text-slate-600 leading-relaxed">Browses the course catalog, self-enrolls in eligible courses, works through lessons, takes timed assessments, tracks progress, and downloads verifiable PDF certificates on completion.</p>
+                <div class="flex flex-wrap gap-1.5">
+                    <span class="chip bg-amber-100 text-amber-700">My Portal</span><span class="chip bg-amber-100 text-amber-700">Course Catalog</span><span class="chip bg-slate-100 text-slate-600">Profile</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════ SUBSCRIPTION & CREDITS ══════════ -->
+<section id="subscription" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-slate-100 text-slate-500">03</span><h2 class="text-2xl font-black text-slate-900">Subscription &amp; AI Credits</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">Your institution runs on a subscription plan that sets two kinds of limits: <b>capacity</b> (how many students and enrollments you can have) and <b>AI credits</b> (how much AI generation and grading you can do). Staff can see current usage on the Staff Console.</p>
+
+    <div class="grid md:grid-cols-2 gap-5 mb-6">
+        <div class="bg-white border border-slate-200 rounded-2xl p-5">
+            <h4 class="font-bold text-slate-900 text-sm mb-3 flex items-center gap-2"><i class="fa-solid fa-users text-blue-500"></i> Capacity limits</h4>
+            <ul class="space-y-2 text-xs text-slate-600">
+                <li class="flex gap-2"><i class="fa-solid fa-user-plus text-slate-400 mt-0.5"></i> <b>Students</b> — the max number of student accounts. Creating a student uses one slot.</li>
+                <li class="flex gap-2"><i class="fa-solid fa-user-check text-slate-400 mt-0.5"></i> <b>Enrollments</b> — the max number of course enrollments. Each enrollment (by staff or student self-enroll) uses one.</li>
+                <li class="flex gap-2"><i class="fa-solid fa-layer-group text-slate-400 mt-0.5"></i> Plans are <b>stackable</b> — the oldest active plan is used first, then the next.</li>
+            </ul>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-5">
+            <h4 class="font-bold text-slate-900 text-sm mb-3 flex items-center gap-2"><i class="fa-solid fa-coins text-violet-500"></i> The four AI credit pools</h4>
+            <ul class="space-y-2 text-xs text-slate-600">
+                <li class="flex gap-2"><i class="fa-solid fa-file-contract text-indigo-400 mt-0.5"></i> <b>CS / CBC</b> — Competency Standard &amp; Curriculum generation (1 credit = 1 generation).</li>
+                <li class="flex gap-2"><i class="fa-solid fa-file-lines text-teal-400 mt-0.5"></i> <b>Course Content</b> — module lists, lesson outlines &amp; content, exam &amp; essay items, thumbnails.</li>
+                <li class="flex gap-2"><i class="fa-solid fa-images text-fuchsia-400 mt-0.5"></i> <b>Slides</b> — AI slide design + slide background images.</li>
+                <li class="flex gap-2"><i class="fa-solid fa-pen-ruler text-amber-400 mt-0.5"></i> <b>Essay Grading</b> — 1 credit = 1 essay/activity/code answer auto-graded.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="ui mb-5">
+        <div class="ui-bar"><span class="ui-dot bg-red-400"></span><span class="ui-dot bg-amber-400"></span><span class="ui-dot bg-emerald-400"></span><span class="ui-title">Staff Console — AI Generation Credits</span></div>
+        <div class="ui-body">
+            <div class="grid sm:grid-cols-2 gap-3">
+                <div class="card">
+                    <div class="flex items-center justify-between mb-1.5"><span class="text-[11px] font-black text-slate-700"><i class="fa-solid fa-file-lines text-teal-500 mr-1"></i> Course Content</span><span class="text-[11px] font-black text-slate-900">1,240 <span class="text-slate-400 font-bold">/ 3,000</span></span></div>
+                    <div class="h-2 rounded-full bg-slate-100 overflow-hidden"><div class="h-full rounded-full bg-teal-500" style="width:41%"></div></div>
+                    <p class="text-[10px] text-slate-400 mt-1">1,760 left this period</p>
+                </div>
+                <div class="card">
+                    <div class="flex items-center justify-between mb-1.5"><span class="text-[11px] font-black text-slate-700"><i class="fa-solid fa-pen-ruler text-amber-500 mr-1"></i> Essay Grading</span><span class="text-[11px] font-black text-slate-900">320 <span class="text-slate-400 font-bold">/ 500</span></span></div>
+                    <div class="h-2 rounded-full bg-slate-100 overflow-hidden"><div class="h-full rounded-full bg-amber-500" style="width:64%"></div></div>
+                    <p class="text-[10px] text-slate-400 mt-1">No daily limit · used today: 40</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid sm:grid-cols-3 gap-4">
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100"><h5 class="font-bold text-xs text-slate-900 mb-1"><i class="fa-solid fa-circle-exclamation text-rose-500 mr-1"></i> When credits run low</h5><p class="text-[11px] text-slate-500">AI generation pauses when a pool is exhausted. Your platform administrator can add more credits to your plan.</p></div>
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100"><h5 class="font-bold text-xs text-slate-900 mb-1"><i class="fa-solid fa-pen-ruler text-amber-500 mr-1"></i> Grading is safe</h5><p class="text-[11px] text-slate-500">If grading credits run out, essays simply wait for a teacher to grade them manually — students are never blocked.</p></div>
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100"><h5 class="font-bold text-xs text-slate-900 mb-1"><i class="fa-solid fa-clock-rotate-left text-blue-500 mr-1"></i> Daily vs period</h5><p class="text-[11px] text-slate-500">Content &amp; slide pools have a daily cap and a total (period) budget. Grading has a total budget only — no daily cap.</p></div>
+    </div>
+</section>
+
+<!-- ══════════ STAFF: CONSOLE ══════════ -->
+<section id="staff-dashboard" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-blue-100 text-blue-600">STAFF</span><h2 class="text-2xl font-black text-slate-900">Staff Console (Dashboard)</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">The Staff Console is your home screen. It gives you a live picture of your institution: account counts, subscription usage, enrollment trends, student progress, teacher workload, certificates issued, and your AI credit balances.</p>
+
+    <div class="ui mb-6">
+        <div class="ui-bar"><span class="ui-dot bg-red-400"></span><span class="ui-dot bg-amber-400"></span><span class="ui-dot bg-emerald-400"></span><span class="ui-title">Staff Console</span></div>
+        <div class="ui-body">
+            <div class="app-shell rounded-xl overflow-hidden">
+                <div class="app-side">
+                    <div class="brand"><div class="h-6 w-6 rounded-lg bg-violet-600 flex items-center justify-center"><i class="fa-solid fa-graduation-cap text-white text-[10px]"></i></div><span class="text-white text-[11px] font-black">AI Genesis</span></div>
+                    <div class="app-item on"><i class="fa-solid fa-gauge-high"></i> Staff Console</div>
+                    <div class="app-item"><i class="fa-solid fa-users-gear"></i> Manage Accounts</div>
+                    <div class="app-item"><i class="fa-solid fa-book-open"></i> Courses</div>
+                    <div class="app-item"><i class="fa-solid fa-layer-group"></i> Course Instances</div>
+                    <div class="app-item"><i class="fa-solid fa-chalkboard-user"></i> Teacher Assign.</div>
+                    <div class="app-item"><i class="fa-solid fa-user-check"></i> Enrollments</div>
+                    <div class="app-item"><i class="fa-solid fa-key"></i> API Keys</div>
+                    <div class="app-item"><i class="fa-solid fa-file-lines"></i> CS Generator</div>
+                    <div class="app-item"><i class="fa-solid fa-book-open"></i> CBC Generator</div>
+                </div>
+                <div class="app-main">
+                    <div class="app-h"><div><p class="text-[13px] font-black text-slate-900">Institution Overview</p><p class="text-[10px] text-slate-400">TVI Manila Training Center</p></div><span class="chip bg-emerald-100 text-emerald-700"><i class="fa-solid fa-circle text-[6px]"></i> Active plan</span></div>
+                    <div class="grid grid-cols-4 gap-2 mb-3">
+                        <div class="card text-center"><p class="text-[9px] text-slate-400 font-bold uppercase">Students</p><p class="text-base font-black text-slate-900">428</p></div>
+                        <div class="card text-center"><p class="text-[9px] text-slate-400 font-bold uppercase">Teachers</p><p class="text-base font-black text-slate-900">22</p></div>
+                        <div class="card text-center"><p class="text-[9px] text-slate-400 font-bold uppercase">Enrollments</p><p class="text-base font-black text-slate-900">1,204</p></div>
+                        <div class="card text-center"><p class="text-[9px] text-slate-400 font-bold uppercase">Certificates</p><p class="text-base font-black text-slate-900">96</p></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="card"><p class="text-[10px] font-black text-slate-700 mb-1">Subscription — Students</p><div class="h-2 rounded-full bg-slate-100 overflow-hidden mb-1"><div class="h-full bg-blue-500" style="width:57%"></div></div><p class="text-[9px] text-slate-400">428 / 750 used</p></div>
+                        <div class="card"><p class="text-[10px] font-black text-slate-700 mb-1">Student Progress</p><div class="flex gap-1"><span class="chip bg-emerald-100 text-emerald-700">On-track 310</span><span class="chip bg-amber-100 text-amber-700">At-risk 84</span></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="bg-white border border-slate-200 rounded-2xl p-4"><h5 class="font-bold text-xs text-slate-900 mb-1">Subscription usage</h5><p class="text-[11px] text-slate-500">Live bars for students, enrollments, and all four AI credit pools, aggregated across your active plans.</p></div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-4"><h5 class="font-bold text-xs text-slate-900 mb-1">Student progress</h5><p class="text-[11px] text-slate-500">On-track / at-risk / inactive counts. Click a category to drill into the specific students.</p></div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-4"><h5 class="font-bold text-xs text-slate-900 mb-1">Enrollment trends</h5><p class="text-[11px] text-slate-500">A 12-week bar chart of new enrollments so you can see momentum.</p></div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-4"><h5 class="font-bold text-xs text-slate-900 mb-1">Teacher workload</h5><p class="text-[11px] text-slate-500">Per-teacher courses and active students; click a teacher for effectiveness metrics.</p></div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-4"><h5 class="font-bold text-xs text-slate-900 mb-1">Certificate issuance</h5><p class="text-[11px] text-slate-500">Certificates issued this month, this quarter, and all-time.</p></div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-4"><h5 class="font-bold text-xs text-slate-900 mb-1">Burn rate</h5><p class="text-[11px] text-slate-500">How fast enrollment slots are being used and an estimate of days until empty.</p></div>
+    </div>
+</section>
+
+<!-- ══════════ STAFF: ACCOUNTS ══════════ -->
+<section id="staff-accounts" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-blue-100 text-blue-600">STAFF</span><h2 class="text-2xl font-black text-slate-900">Manage Accounts</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">Create and manage every account in your institution. Staff can create four account types — <b>Student, Teacher, Staff,</b> and <b>Content Builder (Developer)</b> — but never platform administrators. All accounts you create belong to your institution automatically.</p>
+
+    <div class="grid lg:grid-cols-2 gap-6 items-start">
+        <div class="ui">
+            <div class="ui-bar"><span class="ui-dot bg-red-400"></span><span class="ui-dot bg-amber-400"></span><span class="ui-dot bg-emerald-400"></span><span class="ui-title">Create Account</span></div>
+            <div class="ui-body">
+                <div class="card space-y-2.5">
+                    <div><p class="text-[10px] font-black uppercase text-slate-500 mb-1">Full Name</p><div class="border border-slate-200 rounded-lg px-3 py-1.5 text-[11px] text-slate-700">Juan Dela Cruz</div></div>
+                    <div><p class="text-[10px] font-black uppercase text-slate-500 mb-1">Role</p><div class="border border-slate-200 rounded-lg px-3 py-1.5 text-[11px] text-slate-700 flex items-center justify-between">Student <i class="fa-solid fa-chevron-down text-slate-300"></i></div><p class="text-[9px] text-slate-400 mt-1">Options: Student · Teacher · Staff · Developer</p></div>
+                    <div><p class="text-[10px] font-black uppercase text-slate-500 mb-1">Email</p><div class="border border-slate-200 rounded-lg px-3 py-1.5 text-[11px] text-slate-400">juan@example.com</div></div>
+                    <div><p class="text-[10px] font-black uppercase text-slate-500 mb-1">ULI <span class="text-slate-400 font-normal">(Unique Learner ID)</span></p><div class="border border-slate-200 rounded-lg px-3 py-1.5 text-[11px] text-slate-400">Optional, must be unique</div></div>
+                    <div><p class="text-[10px] font-black uppercase text-slate-500 mb-1">Password</p><div class="border border-slate-200 rounded-lg px-3 py-1.5 text-[11px] text-slate-400">••••••••</div></div>
+                    <div class="btnv w-full justify-center py-2"><i class="fa-solid fa-user-plus"></i> Create Account</div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="steps space-y-5">
+                <div class="step"><h4 class="font-bold text-sm text-slate-900">Open Manage Accounts</h4><p class="text-xs text-slate-500 mt-1">Click <b>Manage Accounts</b> in the left menu, then <b>Create Account</b>.</p></div>
+                <div class="step"><h4 class="font-bold text-sm text-slate-900">Fill in the details</h4><p class="text-xs text-slate-500 mt-1">Enter full name, pick the role, add the email, an optional <b>ULI</b> (for students), and a starting password.</p></div>
+                <div class="step"><h4 class="font-bold text-sm text-slate-900">Save</h4><p class="text-xs text-slate-500 mt-1">The account is created under your institution. Creating a <b>Student</b> uses one subscription student slot.</p></div>
+                <div class="step"><h4 class="font-bold text-sm text-slate-900">Find &amp; edit later</h4><p class="text-xs text-slate-500 mt-1">Search by <b>name, email, or ULI</b> (type at least 3 characters). Edit details, reset passwords, or deactivate accounts.</p></div>
+            </div>
+            <div class="bg-blue-50 border border-blue-100 rounded-2xl p-4 mt-5 text-xs text-blue-800">
+                <b><i class="fa-solid fa-shield-halved mr-1"></i> Scope &amp; safety.</b> You can only see and manage accounts in your own institution. Emails and ULIs must be unique. Deactivated accounts can't log in.
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════ STAFF: INSTANCES ══════════ -->
+<section id="staff-instances" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-blue-100 text-blue-600">STAFF</span><h2 class="text-2xl font-black text-slate-900">Course Instances (Sections / Batches)</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">A <b>course</b> is the master content; a <b>course instance</b> is a specific offering of it — a section or batch with its own code, term, dates and student cap. Students enroll into an instance, and teachers are assigned to an instance. The content itself is shared across all instances, so you never duplicate a course.</p>
+
+    <div class="ui mb-6">
+        <div class="ui-bar"><span class="ui-dot bg-red-400"></span><span class="ui-dot bg-amber-400"></span><span class="ui-dot bg-emerald-400"></span><span class="ui-title">Course Instances</span></div>
+        <div class="ui-body">
+            <div class="flex items-center justify-between mb-2"><div class="flex gap-1.5"><span class="chip bg-slate-100 text-slate-600">Total 14</span><span class="chip bg-emerald-100 text-emerald-700">Open 9</span><span class="chip bg-slate-200 text-slate-600">Closed 4</span><span class="chip bg-slate-200 text-slate-500">Archived 1</span></div><div class="btnv"><i class="fa-solid fa-plus"></i> New Instance</div></div>
+            <div class="card p-0 overflow-hidden">
+                <div class="trow font-black text-slate-500 bg-slate-50" style="grid-template-columns:2fr 1fr 1fr 1fr .8fr;"><div>Course / Section</div><div>Term</div><div>Dates</div><div>Cap</div><div>Status</div></div>
+                <div class="trow" style="grid-template-columns:2fr 1fr 1fr 1fr .8fr;"><div><b>Cookery NC II</b><br><span class="text-slate-400">SEC-A</span></div><div>2026-1H</div><div>Jan–Jun</div><div>40</div><div><span class="chip bg-emerald-100 text-emerald-700">Open</span></div></div>
+                <div class="trow" style="grid-template-columns:2fr 1fr 1fr 1fr .8fr;"><div><b>Bread &amp; Pastry</b><br><span class="text-slate-400">BATCH-3</span></div><div>2026-1H</div><div>Feb–Jul</div><div>30</div><div><span class="chip bg-emerald-100 text-emerald-700">Open</span></div></div>
+                <div class="trow" style="grid-template-columns:2fr 1fr 1fr 1fr .8fr; border-bottom:none;"><div><b>Bookkeeping NC III</b><br><span class="text-slate-400">SEC-B</span></div><div>2025-2H</div><div>Aug–Dec</div><div>35</div><div><span class="chip bg-slate-200 text-slate-600">Closed</span></div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid sm:grid-cols-2 gap-4">
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 text-xs text-slate-600"><b class="text-slate-900">Only published courses.</b> You can create instances only from <b>published</b> courses that belong to your institution. Section codes must be unique per course.</div>
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 text-xs text-slate-600"><b class="text-slate-900">Open / Closed / Archived.</b> <b>Open</b> accepts enrollments, <b>Closed</b> stops new ones, <b>Archived</b> hides it. End date must be after the start date.</div>
+    </div>
+</section>
+
+<!-- ══════════ STAFF: ENROLLMENTS ══════════ -->
+<section id="staff-enrollments" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-blue-100 text-blue-600">STAFF</span><h2 class="text-2xl font-black text-slate-900">Enrollments</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">Enroll your students into course instances — one at a time or in bulk (many students × many instances). Each enrollment consumes one enrollment slot from your subscription. You can also update status and open a full progress view for any student.</p>
+
+    <div class="grid lg:grid-cols-2 gap-6 items-start">
+        <div class="ui">
+            <div class="ui-bar"><span class="ui-dot bg-red-400"></span><span class="ui-dot bg-amber-400"></span><span class="ui-dot bg-emerald-400"></span><span class="ui-title">Bulk Enroll</span></div>
+            <div class="ui-body">
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="card"><p class="text-[10px] font-black uppercase text-slate-500 mb-1.5">Students</p><div class="space-y-1"><div class="flex items-center gap-1.5 text-[11px]"><i class="fa-solid fa-square-check text-blue-500"></i> Juan Dela Cruz</div><div class="flex items-center gap-1.5 text-[11px]"><i class="fa-solid fa-square-check text-blue-500"></i> Maria Santos</div><div class="flex items-center gap-1.5 text-[11px] text-slate-400"><i class="fa-regular fa-square"></i> Pedro Reyes</div></div></div>
+                    <div class="card"><p class="text-[10px] font-black uppercase text-slate-500 mb-1.5">Course Instances</p><div class="space-y-1"><div class="flex items-center gap-1.5 text-[11px]"><i class="fa-solid fa-square-check text-blue-500"></i> Cookery · SEC-A</div><div class="flex items-center gap-1.5 text-[11px] text-slate-400"><i class="fa-regular fa-square"></i> Bread · BATCH-3</div></div></div>
+                </div>
+                <div class="mt-2 flex items-center justify-between"><span class="text-[11px] text-slate-500">2 students × 1 instance = <b>2 enrollments</b></span><div class="btnv"><i class="fa-solid fa-user-check"></i> Enroll</div></div>
+            </div>
+        </div>
+        <div>
+            <div class="steps space-y-5">
+                <div class="step"><h4 class="font-bold text-sm text-slate-900">Pick students &amp; instances</h4><p class="text-xs text-slate-500 mt-1">Search and select one or more students, then one or more open course instances.</p></div>
+                <div class="step"><h4 class="font-bold text-sm text-slate-900">Review the count</h4><p class="text-xs text-slate-500 mt-1">The summary shows "X students × Y instances = Z enrollments" before you confirm.</p></div>
+                <div class="step"><h4 class="font-bold text-sm text-slate-900">Enroll</h4><p class="text-xs text-slate-500 mt-1">Capacity is checked against your subscription; the instance must be <b>Open</b>.</p></div>
+                <div class="step"><h4 class="font-bold text-sm text-slate-900">Monitor progress</h4><p class="text-xs text-slate-500 mt-1">Open any enrollment for a full-screen view: module timeline, assessment attempts, and activity summary.</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════ STAFF: TEACHER ASSIGNMENTS ══════════ -->
+<section id="staff-teachers" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-blue-100 text-blue-600">STAFF</span><h2 class="text-2xl font-black text-slate-900">Teacher Assignments</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">Assign your teachers to the course instances they will handle. Assign in bulk (many teachers × many instances). A teacher can only be assigned to instances within your institution, and only then can they see those students.</p>
+    <div class="ui">
+        <div class="ui-bar"><span class="ui-dot bg-red-400"></span><span class="ui-dot bg-amber-400"></span><span class="ui-dot bg-emerald-400"></span><span class="ui-title">Teacher Assignments</span></div>
+        <div class="ui-body">
+            <div class="card p-0 overflow-hidden">
+                <div class="trow font-black text-slate-500 bg-slate-50" style="grid-template-columns:1.5fr 1.5fr .8fr .8fr .8fr;"><div>Teacher</div><div>Course · Section</div><div>Students</div><div>Progress</div><div>Pass %</div></div>
+                <div class="trow" style="grid-template-columns:1.5fr 1.5fr .8fr .8fr .8fr;"><div><b>Chef R. Aquino</b></div><div>Cookery · SEC-A</div><div>38</div><div>62%</div><div>81%</div></div>
+                <div class="trow" style="grid-template-columns:1.5fr 1.5fr .8fr .8fr .8fr; border-bottom:none;"><div><b>M. Villanueva</b></div><div>Bread · BATCH-3</div><div>29</div><div>44%</div><div>73%</div></div>
+            </div>
+            <div class="mt-2 flex justify-between items-center"><span class="text-[11px] text-slate-500">2 teachers × 1 instance = <b>2 assignments</b></span><div class="btnv"><i class="fa-solid fa-plus"></i> Assign</div></div>
+        </div>
+    </div>
+    <div class="bg-blue-50 border border-blue-100 rounded-2xl p-4 mt-5 text-xs text-blue-800"><b><i class="fa-solid fa-circle-info mr-1"></i> Institution match required.</b> The teacher and the course instance must belong to the same institution, or the assignment is rejected.</div>
+</section>
+
+<!-- ══════════ STAFF: API KEYS ══════════ -->
+<section id="staff-apikeys" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-blue-100 text-blue-600">STAFF</span><h2 class="text-2xl font-black text-slate-900">API Keys (SIS Integration)</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">If your institution runs a Student Information System (SIS) or other software, you can connect it to the LMS with an API key. Keys are scoped (you choose what they can do) and every request is logged for auditing.</p>
+    <div class="grid lg:grid-cols-2 gap-6 items-start">
+        <div class="ui">
+            <div class="ui-bar"><span class="ui-dot bg-red-400"></span><span class="ui-dot bg-amber-400"></span><span class="ui-dot bg-emerald-400"></span><span class="ui-title">API Keys</span></div>
+            <div class="ui-body">
+                <div class="card mb-2"><div class="flex items-center justify-between"><div><p class="text-[11px] font-black text-slate-800">SIS Sync — Production</p><p class="text-[10px] text-slate-400 font-mono">tldsk_a1b2c3d4••••••••</p></div><span class="chip bg-emerald-100 text-emerald-700">Active</span></div><div class="flex gap-1 mt-2"><span class="chip bg-slate-100 text-slate-600">accounts</span><span class="chip bg-slate-100 text-slate-600">enrollments</span><span class="chip bg-slate-100 text-slate-600">grades</span></div></div>
+                <div class="btnv w-full justify-center py-2"><i class="fa-solid fa-key"></i> Generate New Key</div>
+            </div>
+        </div>
+        <div>
+            <div class="bg-amber-50 border border-amber-100 rounded-2xl p-4 text-xs text-amber-800 mb-4"><b><i class="fa-solid fa-triangle-exclamation mr-1"></i> Shown once.</b> The full key is displayed only at the moment you create it — copy and store it securely. We keep only a hashed copy.</div>
+            <ul class="space-y-2.5 text-xs text-slate-600">
+                <li class="flex gap-2"><i class="fa-solid fa-check text-emerald-500 mt-0.5"></i> Give each key a clear <b>label</b> and choose its <b>scopes</b> (accounts, enrollments, grades, courses, certificates, etc.).</li>
+                <li class="flex gap-2"><i class="fa-solid fa-check text-emerald-500 mt-0.5"></i> Keys are limited to <b>your institution's data</b> only.</li>
+                <li class="flex gap-2"><i class="fa-solid fa-check text-emerald-500 mt-0.5"></i> View recent <b>usage logs</b> per key; revoke a key any time.</li>
+                <li class="flex gap-2"><i class="fa-solid fa-check text-emerald-500 mt-0.5"></i> Developers can find full endpoint docs on the public <b>Developer Portal</b> page.</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+
+<!-- ══════════ DEV: COURSES ══════════ -->
+<section id="dev-courses" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-violet-100 text-violet-600">CONTENT BUILDER</span><h2 class="text-2xl font-black text-slate-900">Building Courses</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">The <b>Content Builder</b> (the <code>developer</code> account) lives in one workspace: <b>Courses</b>. This is where every course is created, filled with modules and lessons, given exams, and turned into slide decks — by hand or with AI. Staff share this same workspace.</p>
+
+    <div class="ui mb-6">
+        <div class="ui-bar"><span class="ui-dot bg-red-400"></span><span class="ui-dot bg-amber-400"></span><span class="ui-dot bg-emerald-400"></span><span class="ui-title">Courses</span></div>
+        <div class="ui-body">
+            <div class="app-shell rounded-xl overflow-hidden">
+                <div class="app-side">
+                    <div class="brand"><div class="h-6 w-6 rounded-lg bg-violet-600 flex items-center justify-center"><i class="fa-solid fa-graduation-cap text-white text-[10px]"></i></div><span class="text-white text-[11px] font-black">AI Genesis</span></div>
+                    <div class="app-item on"><i class="fa-solid fa-book-open"></i> Courses</div>
+                    <div class="app-item"><i class="fa-solid fa-user"></i> Profile</div>
+                </div>
+                <div class="app-main">
+                    <div class="app-h"><p class="text-[13px] font-black text-slate-900">Courses</p><div class="btnv"><i class="fa-solid fa-plus"></i> Add Course</div></div>
+                    <div class="card p-0 overflow-hidden">
+                        <div class="trow font-black text-slate-500 bg-slate-50" style="grid-template-columns:2fr 1fr 1fr .8fr;"><div>Course</div><div>Sector</div><div>PQF</div><div>Status</div></div>
+                        <div class="trow" style="grid-template-columns:2fr 1fr 1fr .8fr;"><div><b>Cookery NC II</b><br><span class="text-slate-400">CKY-NC2</span></div><div>Tourism</div><div>Level II</div><div><span class="chip bg-emerald-100 text-emerald-700">Published</span></div></div>
+                        <div class="trow" style="grid-template-columns:2fr 1fr 1fr .8fr; border-bottom:none;"><div><b>Bread &amp; Pastry</b><br><span class="text-slate-400">BPP-NC2</span></div><div>Tourism</div><div>Level II</div><div><span class="chip bg-amber-100 text-amber-700">Draft</span></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6 items-start">
+        <div class="steps space-y-5">
+            <div class="step"><h4 class="font-bold text-sm text-slate-900">Add a course</h4><p class="text-xs text-slate-500 mt-1">Enter name, code, <b>sector</b> and <b>PQF level</b>, description and objectives (you can <b>AI-generate</b> the description &amp; objectives), and total duration hours.</p></div>
+            <div class="step"><h4 class="font-bold text-sm text-slate-900">Draft → Published</h4><p class="text-xs text-slate-500 mt-1">New courses start as <b>Draft</b>. Publish when ready — only published courses can have instances and be seen by students.</p></div>
+            <div class="step"><h4 class="font-bold text-sm text-slate-900">Set visibility</h4><p class="text-xs text-slate-500 mt-1"><b>Public</b> (all students), <b>Institution</b> (your students only), or <b>Private</b> (enroll-by-staff only).</p></div>
+        </div>
+        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100">
+            <h4 class="font-bold text-sm text-slate-900 mb-2">Course structure</h4>
+            <div class="text-xs text-slate-600 space-y-1.5">
+                <div class="flex items-center gap-2"><i class="fa-solid fa-book text-violet-500"></i> <b>Course</b> — the qualification/program</div>
+                <div class="flex items-center gap-2 pl-4"><i class="fa-solid fa-folder text-blue-500"></i> <b>Module</b> — a chapter/unit (has a thumbnail)</div>
+                <div class="flex items-center gap-2 pl-8"><i class="fa-solid fa-file-lines text-emerald-500"></i> <b>Lesson/Section</b> — the actual content</div>
+                <div class="flex items-center gap-2 pl-8"><i class="fa-solid fa-circle-question text-amber-500"></i> <b>Exam items</b> — question bank per module</div>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-3">Modules and lessons can be reordered by drag-and-drop. The sum of module hours can't exceed the course's total hours.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════ DEV: MODULES & LESSONS ══════════ -->
+<section id="dev-modules" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-violet-100 text-violet-600">CONTENT BUILDER</span><h2 class="text-2xl font-black text-slate-900">Modules &amp; Lessons</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">Inside a course you add <b>modules</b> (chapters), and inside each module you add <b>lessons/sections</b>. Lessons are written in a rich text editor and can include videos, files and links. Each module automatically gets an AI thumbnail when created (free).</p>
+
+    <div class="ui mb-5">
+        <div class="ui-bar"><span class="ui-dot bg-red-400"></span><span class="ui-dot bg-amber-400"></span><span class="ui-dot bg-emerald-400"></span><span class="ui-title">Cookery NC II — Module 1: Kitchen Safety</span></div>
+        <div class="ui-body">
+            <div class="grid md:grid-cols-3 gap-3">
+                <div class="card"><div class="h-16 rounded-lg bg-gradient-to-br from-violet-400 to-blue-500 mb-2 flex items-center justify-center text-white"><i class="fa-solid fa-image"></i></div><p class="text-[11px] font-black text-slate-800">Module thumbnail</p><p class="text-[10px] text-slate-400">Auto-generated on create (free)</p></div>
+                <div class="md:col-span-2 card">
+                    <p class="text-[11px] font-black text-slate-700 mb-2">Lessons in this module</p>
+                    <div class="space-y-1.5">
+                        <div class="flex items-center gap-2 text-[11px] text-slate-600"><i class="fa-solid fa-grip-vertical text-slate-300"></i><i class="fa-solid fa-file-lines text-emerald-500"></i> 1. Hazards in the kitchen <span class="chip bg-emerald-100 text-emerald-700 ml-auto">lesson</span></div>
+                        <div class="flex items-center gap-2 text-[11px] text-slate-600"><i class="fa-solid fa-grip-vertical text-slate-300"></i><i class="fa-solid fa-video text-blue-500"></i> 2. Safe knife handling <span class="chip bg-blue-100 text-blue-700 ml-auto">video</span></div>
+                        <div class="flex items-center gap-2 text-[11px] text-slate-600"><i class="fa-solid fa-grip-vertical text-slate-300"></i><i class="fa-solid fa-file-arrow-down text-slate-500"></i> 3. Safety checklist <span class="chip bg-slate-100 text-slate-600 ml-auto">file</span></div>
+                    </div>
+                    <div class="flex gap-1.5 mt-2"><span class="btnv"><i class="fa-solid fa-plus"></i> Add Lesson</span><span class="btng"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Generate</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="grid sm:grid-cols-2 gap-4">
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 text-xs text-slate-600"><b class="text-slate-900">Rich lessons.</b> Type content in the editor, or embed a YouTube/uploaded video, a downloadable file, or an external link. All content is safely sanitized before it's saved.</div>
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 text-xs text-slate-600"><b class="text-slate-900">Reorder freely.</b> Drag modules and lessons into any order. Only <b>published</b> modules count toward student progress.</div>
+    </div>
+</section>
+
+<!-- ══════════ DEV: AI + CREDITS ══════════ -->
+<section id="dev-ai" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-violet-100 text-violet-600">CONTENT BUILDER</span><h2 class="text-2xl font-black text-slate-900">AI Content Generation &amp; Credits</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">The biggest time-saver: AI can generate your whole course. Each AI action consumes <b>credits</b> from your institution's pools. Here's exactly what each button costs so there are no surprises.</p>
+
+    <div class="ui mb-6">
+        <div class="ui-bar"><span class="ui-dot bg-red-400"></span><span class="ui-dot bg-amber-400"></span><span class="ui-dot bg-emerald-400"></span><span class="ui-title">AI Generate — Lesson Content</span></div>
+        <div class="ui-body">
+            <div class="card">
+                <div class="flex items-center justify-between mb-2"><p class="text-[12px] font-black text-slate-800">Generate lesson content for this section</p><span class="chip bg-teal-100 text-teal-700"><i class="fa-solid fa-coins"></i> ~10 credits/section</span></div>
+                <p class="text-[11px] text-slate-500 mb-2">AI writes a full lesson from the module topic in two passes: an <b>outline</b> first, then the <b>full content</b> per section. You review and edit before saving.</p>
+                <div class="flex gap-1.5"><span class="btng"><i class="fa-solid fa-wand-magic-sparkles"></i> Generate</span><span class="chip bg-slate-100 text-slate-500">Content pool</span></div>
+            </div>
+        </div>
+    </div>
+
+    <h4 class="font-bold text-slate-900 text-sm mb-3">What each AI action costs (Course Content pool)</h4>
+    <div class="card p-0 overflow-hidden mb-4">
+        <div class="trow font-black text-slate-500 bg-slate-50" style="grid-template-columns:2.4fr 1fr 2fr;"><div>AI action</div><div>Credits</div><div>Notes</div></div>
+        <div class="trow" style="grid-template-columns:2.4fr 1fr 2fr;"><div>Module list (per course)</div><div><b>3</b></div><div>Suggests all module titles</div></div>
+        <div class="trow" style="grid-template-columns:2.4fr 1fr 2fr;"><div>Lesson outline (per module)</div><div><b>4</b></div><div>Pass 1 — section structure</div></div>
+        <div class="trow" style="grid-template-columns:2.4fr 1fr 2fr;"><div>Lesson content (per section)</div><div><b>10</b></div><div>Pass 2 — full written lesson</div></div>
+        <div class="trow" style="grid-template-columns:2.4fr 1fr 2fr;"><div>Regenerate a section</div><div><b>10</b></div><div>Rewrites one section</div></div>
+        <div class="trow" style="grid-template-columns:2.4fr 1fr 2fr;"><div>Exam items (per section)</div><div><b>6</b></div><div>One AI call per section</div></div>
+        <div class="trow" style="grid-template-columns:2.4fr 1fr 2fr;"><div>Essay items (per section)</div><div><b>6</b></div><div>One AI call per section</div></div>
+        <div class="trow" style="grid-template-columns:2.4fr 1fr 2fr; border-bottom:none;"><div>Thumbnail (explicit regenerate)</div><div><b>4</b></div><div>Auto-on-create is <b>free</b></div></div>
+    </div>
+    <div class="card p-0 overflow-hidden mb-4">
+        <div class="trow font-black text-slate-500 bg-slate-50" style="grid-template-columns:2.4fr 1fr 2fr;"><div>Slide action (Slides pool)</div><div>Credits</div><div>Notes</div></div>
+        <div class="trow" style="grid-template-columns:2.4fr 1fr 2fr;"><div>Slide design (per section)</div><div><b>11</b></div><div>Designs the slides for a section</div></div>
+        <div class="trow" style="grid-template-columns:2.4fr 1fr 2fr; border-bottom:none;"><div>Slide background image</div><div><b>4</b></div><div>Per generated image (~3/section)</div></div>
+    </div>
+
+    <div class="grid sm:grid-cols-3 gap-4">
+        <div class="bg-teal-50 rounded-2xl p-4 border border-teal-100 text-xs text-teal-800"><b>A typical course</b> (~10 modules × 6 sections) uses roughly <b>1,400 content credits</b>. A shallow course ~770; a deep one ~2,600.</div>
+        <div class="bg-fuchsia-50 rounded-2xl p-4 border border-fuchsia-100 text-xs text-fuchsia-800"><b>Slides</b> use about <b>140 credits per module</b> (6 sections). The button shows an estimate before you run it.</div>
+        <div class="bg-rose-50 rounded-2xl p-4 border border-rose-100 text-xs text-rose-800"><b>Out of credits?</b> The action stops with a clear message. Slide jobs that run out mid-way <b>keep every slide already made</b>.</div>
+    </div>
+</section>
+
+<!-- ══════════ DEV: EXAMS ══════════ -->
+<section id="dev-exams" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-violet-100 text-violet-600">CONTENT BUILDER</span><h2 class="text-2xl font-black text-slate-900">Exams &amp; Assessments</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">Build a question bank per module (AI-generated from your lesson content, or written manually), then create <b>assessments</b> that pull questions from selected modules. You set the passing score, time limit and number of attempts.</p>
+    <div class="grid lg:grid-cols-2 gap-6 items-start">
+        <div class="ui">
+            <div class="ui-bar"><span class="ui-dot bg-red-400"></span><span class="ui-dot bg-amber-400"></span><span class="ui-dot bg-emerald-400"></span><span class="ui-title">Assessment Settings</span></div>
+            <div class="ui-body">
+                <div class="card space-y-2">
+                    <div class="flex justify-between text-[11px]"><span class="text-slate-500">Title</span><b class="text-slate-800">Final Assessment</b></div>
+                    <div class="flex justify-between text-[11px]"><span class="text-slate-500">Total items</span><b class="text-slate-800">20</b></div>
+                    <div class="flex justify-between text-[11px]"><span class="text-slate-500">Passing score</span><b class="text-slate-800">75%</b></div>
+                    <div class="flex justify-between text-[11px]"><span class="text-slate-500">Time limit</span><b class="text-slate-800">60 min</b></div>
+                    <div class="flex justify-between text-[11px]"><span class="text-slate-500">Max attempts</span><b class="text-slate-800">3</b></div>
+                    <div class="flex justify-between text-[11px]"><span class="text-slate-500">Source modules</span><b class="text-slate-800">Modules 1–4</b></div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <ul class="space-y-2.5 text-xs text-slate-600">
+                <li class="flex gap-2"><i class="fa-solid fa-check text-emerald-500 mt-0.5"></i> <b>Question types:</b> multiple-choice (auto-graded) plus <b>essay / activity / code</b> answers (AI-graded, teacher-reviewable).</li>
+                <li class="flex gap-2"><i class="fa-solid fa-check text-emerald-500 mt-0.5"></i> <b>Item pooling:</b> assign which modules feed an assessment and give each a weight; items are pulled proportionally and randomly.</li>
+                <li class="flex gap-2"><i class="fa-solid fa-check text-emerald-500 mt-0.5"></i> Only <b>published</b> assessments are visible to students.</li>
+                <li class="flex gap-2"><i class="fa-solid fa-check text-emerald-500 mt-0.5"></i> Passing <b>all</b> assessments (plus finishing all modules) is what unlocks a student's certificate.</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════ DEV: SLIDES ══════════ -->
+<section id="dev-slides" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-violet-100 text-violet-600">CONTENT BUILDER</span><h2 class="text-2xl font-black text-slate-900">AI Slide Decks</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">Turn a module's lessons into a presentation. AI designs the slides and generates background images, then renders a PDF you can review, tweak (regenerate/delete/reorder individual slides), and save.</p>
+    <div class="ui mb-5">
+        <div class="ui-bar"><span class="ui-dot bg-red-400"></span><span class="ui-dot bg-amber-400"></span><span class="ui-dot bg-emerald-400"></span><span class="ui-title">Generate Slides — live progress</span></div>
+        <div class="ui-body">
+            <div class="grid grid-cols-4 gap-2 mb-3 text-center text-[10px] font-bold">
+                <div class="card"><i class="fa-solid fa-circle-check text-emerald-500"></i><p class="text-slate-600 mt-1">Designing</p></div>
+                <div class="card"><i class="fa-solid fa-circle-check text-emerald-500"></i><p class="text-slate-600 mt-1">Imaging</p></div>
+                <div class="card"><i class="fa-solid fa-spinner text-blue-500"></i><p class="text-slate-600 mt-1">Rendering</p></div>
+                <div class="card"><i class="fa-regular fa-circle text-slate-300"></i><p class="text-slate-400 mt-1">Done</p></div>
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+                <div class="aspect-video rounded-lg bg-gradient-to-br from-slate-700 to-slate-900 flex items-center justify-center text-white text-[10px] font-bold">Title Slide</div>
+                <div class="aspect-video rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-[10px] font-bold">Content</div>
+                <div class="aspect-video rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white text-[10px] font-bold">Summary</div>
+            </div>
+        </div>
+    </div>
+    <div class="bg-fuchsia-50 border border-fuchsia-100 rounded-2xl p-4 text-xs text-fuchsia-800"><b><i class="fa-solid fa-shield-heart mr-1"></i> Credit-safe generation.</b> If slide credits run out during a job, generation stops gracefully and <b>every slide already made is kept and saved</b> — you'll see a "credits ran out — partial slides saved" notice and can finish later after topping up.</div>
+</section>
+
+
+<!-- ══════════ CS GENERATOR ══════════ -->
+<section id="cs-generator" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-indigo-100 text-indigo-600">STAFF</span><h2 class="text-2xl font-black text-slate-900">Competency Standards (CS) Generator</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">Create full TESDA-format <b>Competency Standards</b> documents. A qualification is built from <b>Basic</b>, <b>Common</b> and <b>Core</b> competency units, each with elements, performance criteria, required knowledge/skills, range of variables and evidence guides — all AI-assisted — plus training requirements and acknowledgements. Export a formatted <b>.docx</b>.</p>
+
+    <div class="ui mb-6">
+        <div class="ui-bar"><span class="ui-dot bg-red-400"></span><span class="ui-dot bg-amber-400"></span><span class="ui-dot bg-emerald-400"></span><span class="ui-title">CS Generator — Qualification Editor</span></div>
+        <div class="ui-body">
+            <div class="flex gap-1 mb-3 text-[11px] font-bold flex-wrap">
+                <span class="chip bg-indigo-600 text-white">Details</span><span class="chip bg-slate-100 text-slate-600">Core Competencies</span><span class="chip bg-slate-100 text-slate-600">Training Requirements</span><span class="chip bg-slate-100 text-slate-600">Acknowledgements</span>
+            </div>
+            <div class="grid md:grid-cols-3 gap-2">
+                <div class="card"><p class="text-[10px] font-black uppercase text-slate-400 mb-1">Basic</p><p class="text-[11px] text-slate-700">Auto-assigned by PQF level</p></div>
+                <div class="card"><p class="text-[10px] font-black uppercase text-slate-400 mb-1">Common</p><p class="text-[11px] text-slate-700">Auto-assigned by sector</p></div>
+                <div class="card"><p class="text-[10px] font-black uppercase text-slate-400 mb-1">Core</p><p class="text-[11px] text-slate-700">You add + AI-generate</p></div>
+            </div>
+            <div class="flex gap-1.5 mt-3"><span class="btng"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Generate Unit</span><span class="btnv"><i class="fa-solid fa-file-word"></i> Download .docx</span></div>
+        </div>
+    </div>
+
+    <div class="grid sm:grid-cols-2 gap-4">
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 text-xs text-slate-600"><b class="text-slate-900">AI does the heavy lifting.</b> Generate elements → range of variables → evidence guide in sequence, plus descriptions, job titles, trainee/trainer requirements, and tools/equipment/facilities.</div>
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 text-xs text-slate-600"><b class="text-slate-900">Enable/disable units.</b> Toggle any basic or common unit on/off per qualification. Disabled units are excluded from the exported document and the derived CBC.</div>
+    </div>
+    <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-4 mt-4 text-xs text-indigo-800"><b><i class="fa-solid fa-coins mr-1"></i> Credits.</b> Each AI generation uses <b>1 CS/CBC credit</b>. A full CS is roughly 35–55 credits. Your institution's own qualifications are private to you; shared standards are read-only.</div>
+</section>
+
+<!-- ══════════ CBC GENERATOR ══════════ -->
+<section id="cbc-generator" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-indigo-100 text-indigo-600">STAFF</span><h2 class="text-2xl font-black text-slate-900">Competency-Based Curriculum (CBC) Generator</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">Turn a completed CS qualification into a <b>Competency-Based Curriculum</b>. The CBC is <b>derived</b> from your CS — it reads the competency content live and reshapes it into a curriculum (units become modules with gerund titles, elements become learning outcomes, etc.). You add curriculum-only extras, then export a <b>.docx</b>.</p>
+
+    <div class="ui mb-6">
+        <div class="ui-bar"><span class="ui-dot bg-red-400"></span><span class="ui-dot bg-amber-400"></span><span class="ui-dot bg-emerald-400"></span><span class="ui-title">CBC — Create from a CS qualification</span></div>
+        <div class="ui-body">
+            <div class="card mb-2">
+                <p class="text-[11px] font-black text-slate-700 mb-2">Gerund conversion (automatic)</p>
+                <div class="flex items-center gap-2 text-[11px]"><span class="text-slate-500">"Receive and respond to workplace communication"</span><i class="fa-solid fa-arrow-right text-indigo-400"></i><b class="text-slate-800">"Receiving and Responding to Workplace Communication"</b></div>
+            </div>
+            <div class="flex gap-1 text-[11px] font-bold flex-wrap"><span class="chip bg-indigo-600 text-white">Course Design</span><span class="chip bg-slate-100 text-slate-600">Modules &amp; LOs</span><span class="chip bg-slate-100 text-slate-600">Resources</span><span class="chip bg-slate-100 text-slate-600">Gerund review</span></div>
+        </div>
+    </div>
+    <div class="grid sm:grid-cols-2 gap-4">
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 text-xs text-slate-600"><b class="text-slate-900">Nothing duplicated.</b> The CBC always reflects the latest CS content. You only store curriculum-specific overrides (conditions, methodologies, resource areas, hour overrides).</div>
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 text-xs text-slate-600"><b class="text-slate-900">AI drafts too.</b> AI can draft the conditions &amp; methodologies per learning outcome and the resource areas — you review before saving. Uses CS/CBC credits.</div>
+    </div>
+</section>
+
+
+<!-- ══════════ DEV PORTAL: OVERVIEW ══════════ -->
+<section id="dev-portal" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-slate-800 text-white">API</span><h2 class="text-2xl font-black text-slate-900">The Developer Portal (<code>/developer</code>)</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">Your platform includes a public, self-service <b>Developer Portal</b> at <code>/developer</code> — a full API reference for connecting your Student Information System (SIS) or other software. It documents every endpoint and includes an interactive <b>"Try It"</b> console so your developers can test calls right in the browser using your API key.</p>
+
+    <div class="ui mb-6">
+        <div class="ui-bar"><span class="ui-dot bg-red-400"></span><span class="ui-dot bg-amber-400"></span><span class="ui-dot bg-emerald-400"></span><span class="ui-title">your-lms.gov.ph / developer</span></div>
+        <div class="ui-body">
+            <div class="app-shell rounded-xl overflow-hidden" style="background:#fff;">
+                <div class="app-side" style="background:#fff; border-right:1px solid #e2e8f0;">
+                    <p class="text-[9px] font-black text-slate-400 uppercase px-2 mb-1">Your API Key</p>
+                    <div class="border border-slate-200 rounded-lg px-2 py-1 text-[10px] text-slate-400 font-mono mb-2 mx-1">tldsk_…</div>
+                    <p class="text-[9px] font-black text-slate-400 uppercase px-2 mb-1">Endpoints</p>
+                    <div class="app-item" style="color:#475569;"><i class="fa-solid fa-heart-pulse"></i> Test / Ping</div>
+                    <div class="app-item on" style="background:#eff6ff; color:#1d4ed8;"><i class="fa-solid fa-users"></i> Accounts</div>
+                    <div class="app-item" style="color:#475569;"><i class="fa-solid fa-user-plus"></i> Enrollments</div>
+                    <div class="app-item" style="color:#475569;"><i class="fa-solid fa-chart-line"></i> Grades</div>
+                    <div class="app-item" style="color:#475569;"><i class="fa-solid fa-book"></i> Courses</div>
+                    <div class="app-item" style="color:#475569;"><i class="fa-solid fa-certificate"></i> Certificates</div>
+                </div>
+                <div class="app-main" style="background:#f8fafc;">
+                    <p class="text-[13px] font-black text-slate-900 mb-2">Accounts</p>
+                    <div class="card mb-2"><div class="flex items-center gap-2 mb-1"><span class="chip bg-emerald-100 text-emerald-700">GET</span><code class="text-[10px] text-slate-700">/api/v1/external/accounts</code></div><p class="text-[10px] text-slate-400">List student accounts · scope accounts:read</p><span class="text-[10px] font-bold text-blue-600 mt-1 inline-block"><i class="fa-solid fa-play text-[8px]"></i> Try It</span></div>
+                    <div class="card"><div class="flex items-center gap-2 mb-1"><span class="chip bg-blue-100 text-blue-700">POST</span><code class="text-[10px] text-slate-700">/api/v1/external/accounts</code></div><p class="text-[10px] text-slate-400">Create student · scope accounts:write</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid sm:grid-cols-3 gap-4">
+        <div class="bg-white border border-slate-200 rounded-2xl p-4"><p class="text-xs font-bold text-slate-800 mb-0.5">Base URL</p><code class="text-[11px] text-slate-500">/api/v1/external/</code></div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-4"><p class="text-xs font-bold text-slate-800 mb-0.5">Auth</p><code class="text-[11px] text-slate-500">X-API-Key header</code></div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-4"><p class="text-xs font-bold text-slate-800 mb-0.5">Format</p><code class="text-[11px] text-slate-500">JSON (UTF-8)</code></div>
+    </div>
+    <div class="bg-slate-800 text-white rounded-2xl p-4 mt-4 text-xs"><b><i class="fa-solid fa-circle-info mr-1 text-blue-300"></i> Who uses this:</b> your technical team / SIS vendor. Staff generate the API key (see <a href="#staff-apikeys" class="text-blue-300 underline">API Keys</a>); developers then read the reference at <code class="bg-white/10 px-1 rounded">/developer</code> and integrate. All access is scoped to your institution only.</div>
+</section>
+
+<!-- ══════════ DEV PORTAL: AUTH & SCOPES ══════════ -->
+<section id="api-auth" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-slate-800 text-white">API</span><h2 class="text-2xl font-black text-slate-900">Authentication &amp; Scopes</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">Every request includes your API key in the <code>X-API-Key</code> header. Each key carries a set of <b>scopes</b> that decide what it can do — issued when Staff generate the key.</p>
+
+    <div class="bg-slate-900 rounded-2xl p-5 mb-5 overflow-x-auto">
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Example request</p>
+        <pre class="text-emerald-400 text-xs leading-relaxed"><code>curl -X GET https://your-lms.gov.ph/api/v1/external/ping \
+  -H "X-API-Key: tldsk_your_api_key_here"</code></pre>
+    </div>
+    <div class="bg-amber-50 border border-amber-100 rounded-2xl p-4 text-xs text-amber-800 mb-6"><b><i class="fa-solid fa-key mr-1"></i> Key format:</b> keys start with <code class="bg-amber-100 px-1 rounded">tldsk_</code> followed by 48 hex characters (54 chars total). The full key is shown only once at creation — store it safely.</div>
+
+    <h4 class="font-bold text-slate-900 text-sm mb-3">Available scopes</h4>
+    <div class="card p-0 overflow-hidden mb-4">
+        <div class="trow font-black text-slate-500 bg-slate-50" style="grid-template-columns:1.4fr 2fr;"><div>Scope</div><div>Grants</div></div>
+        <div class="trow" style="grid-template-columns:1.4fr 2fr;"><div><code>accounts:read</code></div><div>List / get student accounts</div></div>
+        <div class="trow" style="grid-template-columns:1.4fr 2fr;"><div><code>accounts:write</code></div><div>Create / update student accounts</div></div>
+        <div class="trow" style="grid-template-columns:1.4fr 2fr;"><div><code>enrollments:read</code></div><div>List / get enrollments &amp; progress</div></div>
+        <div class="trow" style="grid-template-columns:1.4fr 2fr;"><div><code>enrollments:write</code></div><div>Create / update / delete enrollments</div></div>
+        <div class="trow" style="grid-template-columns:1.4fr 2fr;"><div><code>grades:read</code></div><div>Read assessment scores &amp; grades</div></div>
+        <div class="trow" style="grid-template-columns:1.4fr 2fr;"><div><code>courses:read</code></div><div>Browse the course catalog</div></div>
+        <div class="trow" style="grid-template-columns:1.4fr 2fr;"><div><code>instances:read</code></div><div>List course instances</div></div>
+        <div class="trow" style="grid-template-columns:1.4fr 2fr;"><div><code>instances:write</code></div><div>Create / update course instances</div></div>
+        <div class="trow" style="grid-template-columns:1.4fr 2fr;"><div><code>certificates:read</code></div><div>Check certificate status &amp; verify</div></div>
+        <div class="trow" style="grid-template-columns:1.4fr 2fr; border-bottom:none;"><div><code>subscription:read</code></div><div>View subscription usage</div></div>
+    </div>
+    <div class="bg-blue-50 border border-blue-100 rounded-2xl p-4 text-xs text-blue-800">
+        <b><i class="fa-solid fa-boxes-stacked mr-1"></i> Scope bundles</b> (presets when generating a key): <b>read_only</b> — all <code>:read</code> scopes · <b>enrollment_manager</b> — accounts + enrollments read/write, courses &amp; instances read · <b>full_access</b> — everything.
+    </div>
+</section>
+
+<!-- ══════════ DEV PORTAL: ENDPOINTS ══════════ -->
+<section id="api-endpoints" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-slate-800 text-white">API</span><h2 class="text-2xl font-black text-slate-900">Endpoint Reference</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">The API is organized into 8 groups. Every path is prefixed with <code>/api/v1/external</code>. Below is the full map — the <code>/developer</code> page shows the same list with parameters, example bodies, and a live "Try It" button on each one.</p>
+
+    <div class="space-y-5">
+        <!-- Accounts -->
+        <div class="border border-slate-200 rounded-2xl overflow-hidden">
+            <div class="flex items-center gap-2.5 px-4 py-2.5 bg-blue-50 border-b border-blue-100"><i class="fa-solid fa-users text-blue-600"></i><h3 class="font-black text-slate-900 text-sm">Accounts</h3><span class="text-[10px] text-slate-400 font-bold uppercase ml-auto">student management</span></div>
+            <div class="p-2">
+                <div class="trow" style="grid-template-columns:.5fr 3fr 2fr;"><span class="chip method bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/accounts</code><span class="text-slate-400">List students (paginated, search)</span></div>
+                <div class="trow" style="grid-template-columns:.5fr 3fr 2fr;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/accounts/{id}</code><span class="text-slate-400">Get one account</span></div>
+                <div class="trow" style="grid-template-columns:.5fr 3fr 2fr;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/accounts/by-email/{email}</code><span class="text-slate-400">Lookup by email</span></div>
+                <div class="trow" style="grid-template-columns:.5fr 3fr 2fr;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/accounts/by-uli/{uli}</code><span class="text-slate-400">Lookup by ULI</span></div>
+                <div class="trow" style="grid-template-columns:.5fr 3fr 2fr;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/accounts/{id}/enrollments</code><span class="text-slate-400">Student's enrollments</span></div>
+                <div class="trow" style="grid-template-columns:.5fr 3fr 2fr;"><span class="chip bg-blue-100 text-blue-700 justify-center">POST</span><code class="text-[10px]">/accounts</code><span class="text-slate-400">Create student (idempotent)</span></div>
+                <div class="trow" style="grid-template-columns:.5fr 3fr 2fr;"><span class="chip bg-blue-100 text-blue-700 justify-center">POST</span><code class="text-[10px]">/accounts/bulk</code><span class="text-slate-400">Create up to 100</span></div>
+                <div class="trow" style="grid-template-columns:.5fr 3fr 2fr; border-bottom:none;"><span class="chip bg-amber-100 text-amber-700 justify-center">PATCH</span><code class="text-[10px]">/accounts/{id}</code><span class="text-slate-400">Update fields</span></div>
+            </div>
+        </div>
+        <!-- Enrollments -->
+        <div class="border border-slate-200 rounded-2xl overflow-hidden">
+            <div class="flex items-center gap-2.5 px-4 py-2.5 bg-emerald-50 border-b border-emerald-100"><i class="fa-solid fa-user-plus text-emerald-600"></i><h3 class="font-black text-slate-900 text-sm">Enrollments</h3></div>
+            <div class="p-2">
+                <div class="trow" style="grid-template-columns:.5fr 3fr 2fr;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/enrollments</code><span class="text-slate-400">List (filter by status/course/instance/student)</span></div>
+                <div class="trow" style="grid-template-columns:.5fr 3fr 2fr;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/enrollments/{id}</code><span class="text-slate-400">Detail + progress summary</span></div>
+                <div class="trow" style="grid-template-columns:.5fr 3fr 2fr;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/enrollments/{id}/progress</code><span class="text-slate-400">Module-by-module progress</span></div>
+                <div class="trow" style="grid-template-columns:.5fr 3fr 2fr;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/enrollments/{id}/assessments</code><span class="text-slate-400">Assessment results</span></div>
+                <div class="trow" style="grid-template-columns:.5fr 3fr 2fr;"><span class="chip bg-blue-100 text-blue-700 justify-center">POST</span><code class="text-[10px]">/enrollments</code><span class="text-slate-400">Enroll (by account_id or uli)</span></div>
+                <div class="trow" style="grid-template-columns:.5fr 3fr 2fr;"><span class="chip bg-blue-100 text-blue-700 justify-center">POST</span><code class="text-[10px]">/enrollments/bulk</code><span class="text-slate-400">Bulk (max 200 pairings)</span></div>
+                <div class="trow" style="grid-template-columns:.5fr 3fr 2fr;"><span class="chip bg-amber-100 text-amber-700 justify-center">PATCH</span><code class="text-[10px]">/enrollments/{id}</code><span class="text-slate-400">Update status</span></div>
+                <div class="trow" style="grid-template-columns:.5fr 3fr 2fr; border-bottom:none;"><span class="chip bg-rose-100 text-rose-700 justify-center">DEL</span><code class="text-[10px]">/enrollments/{id}</code><span class="text-slate-400">Unenroll (drop)</span></div>
+            </div>
+        </div>
+        <!-- Grades -->
+        <div class="border border-slate-200 rounded-2xl overflow-hidden">
+            <div class="flex items-center gap-2.5 px-4 py-2.5 bg-amber-50 border-b border-amber-100"><i class="fa-solid fa-chart-line text-amber-600"></i><h3 class="font-black text-slate-900 text-sm">Grades</h3><span class="text-[10px] text-slate-400 font-bold uppercase ml-auto">read-only</span></div>
+            <div class="p-2">
+                <div class="trow" style="grid-template-columns:.5fr 3fr 2fr;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/grades/enrollment/{id}</code><span class="text-slate-400">Full grade record</span></div>
+                <div class="trow" style="grid-template-columns:.5fr 3fr 2fr;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/grades/student/{account_id}</code><span class="text-slate-400">All grades for a student</span></div>
+                <div class="trow" style="grid-template-columns:.5fr 3fr 2fr;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/grades/course-instance/{id}</code><span class="text-slate-400">Class list with grades</span></div>
+                <div class="trow" style="grid-template-columns:.5fr 3fr 2fr;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/grades/course-instance/{id}/summary</code><span class="text-slate-400">Pass rate &amp; distribution</span></div>
+                <div class="trow" style="grid-template-columns:.5fr 3fr 2fr; border-bottom:none;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/grades/attempt/{id}</code><span class="text-slate-400">Per-question detail</span></div>
+            </div>
+        </div>
+        <!-- Courses + Instances -->
+        <div class="grid md:grid-cols-2 gap-5">
+            <div class="border border-slate-200 rounded-2xl overflow-hidden">
+                <div class="flex items-center gap-2.5 px-4 py-2.5 bg-violet-50 border-b border-violet-100"><i class="fa-solid fa-book text-violet-600"></i><h3 class="font-black text-slate-900 text-sm">Courses</h3></div>
+                <div class="p-2">
+                    <div class="trow" style="grid-template-columns:.5fr 3fr;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/courses</code></div>
+                    <div class="trow" style="grid-template-columns:.5fr 3fr;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/courses/{id}</code></div>
+                    <div class="trow" style="grid-template-columns:.5fr 3fr;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/courses/{id}/modules</code></div>
+                    <div class="trow" style="grid-template-columns:.5fr 3fr; border-bottom:none;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/courses/{id}/assessments</code></div>
+                </div>
+            </div>
+            <div class="border border-slate-200 rounded-2xl overflow-hidden">
+                <div class="flex items-center gap-2.5 px-4 py-2.5 bg-rose-50 border-b border-rose-100"><i class="fa-solid fa-layer-group text-rose-600"></i><h3 class="font-black text-slate-900 text-sm">Course Instances</h3></div>
+                <div class="p-2">
+                    <div class="trow" style="grid-template-columns:.5fr 3fr;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/course-instances</code></div>
+                    <div class="trow" style="grid-template-columns:.5fr 3fr;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/course-instances/{id}</code></div>
+                    <div class="trow" style="grid-template-columns:.5fr 3fr;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/course-instances/{id}/students</code></div>
+                    <div class="trow" style="grid-template-columns:.5fr 3fr;"><span class="chip bg-blue-100 text-blue-700 justify-center">POST</span><code class="text-[10px]">/course-instances</code></div>
+                    <div class="trow" style="grid-template-columns:.5fr 3fr;"><span class="chip bg-amber-100 text-amber-700 justify-center">PATCH</span><code class="text-[10px]">/course-instances/{id}</code></div>
+                    <div class="trow" style="grid-template-columns:.5fr 3fr; border-bottom:none;"><span class="chip bg-rose-100 text-rose-700 justify-center">DEL</span><code class="text-[10px]">/course-instances/{id}</code></div>
+                </div>
+            </div>
+        </div>
+        <!-- Certificates + Subscription -->
+        <div class="grid md:grid-cols-2 gap-5">
+            <div class="border border-slate-200 rounded-2xl overflow-hidden">
+                <div class="flex items-center gap-2.5 px-4 py-2.5 bg-teal-50 border-b border-teal-100"><i class="fa-solid fa-certificate text-teal-600"></i><h3 class="font-black text-slate-900 text-sm">Certificates</h3></div>
+                <div class="p-2">
+                    <div class="trow" style="grid-template-columns:.5fr 3fr;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/certificates/enrollment/{id}</code></div>
+                    <div class="trow" style="grid-template-columns:.5fr 3fr;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/certificates/student/{account_id}</code></div>
+                    <div class="trow" style="grid-template-columns:.5fr 3fr;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/certificates/verify/{token}</code></div>
+                    <div class="trow" style="grid-template-columns:.5fr 3fr; border-bottom:none;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/certificates/enrollment/{id}/download-url</code></div>
+                </div>
+            </div>
+            <div class="border border-slate-200 rounded-2xl overflow-hidden">
+                <div class="flex items-center gap-2.5 px-4 py-2.5 bg-indigo-50 border-b border-indigo-100"><i class="fa-solid fa-gauge text-indigo-600"></i><h3 class="font-black text-slate-900 text-sm">Subscription &amp; Test</h3></div>
+                <div class="p-2">
+                    <div class="trow" style="grid-template-columns:.5fr 3fr;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/subscription</code></div>
+                    <div class="trow" style="grid-template-columns:.5fr 3fr;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/subscription/usage-history</code></div>
+                    <div class="trow" style="grid-template-columns:.5fr 3fr;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/ping</code></div>
+                    <div class="trow" style="grid-template-columns:.5fr 3fr; border-bottom:none;"><span class="chip bg-emerald-100 text-emerald-700 justify-center">GET</span><code class="text-[10px]">/ping/scoped</code></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════ DEV PORTAL: TRY IT & ERRORS ══════════ -->
+<section id="api-tryit" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-slate-800 text-white">API</span><h2 class="text-2xl font-black text-slate-900">"Try It" Console, Errors &amp; Limits</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">The <code>/developer</code> page lets your team test any endpoint live: paste your API key once, click <b>Try It</b> on an endpoint, fill in any path parameters or JSON body, and send — the real response and status appear instantly.</p>
+
+    <div class="ui mb-6">
+        <div class="ui-bar"><span class="ui-dot bg-red-400"></span><span class="ui-dot bg-amber-400"></span><span class="ui-dot bg-emerald-400"></span><span class="ui-title">Try It — POST /accounts</span></div>
+        <div class="ui-body">
+            <div class="card mb-2"><p class="text-[10px] font-black uppercase text-slate-400 mb-1">Request Body (JSON)</p><pre class="text-[10px] text-slate-600 leading-relaxed">{
+  "email": "newstudent@example.com",
+  "full_name": "Juan Dela Cruz",
+  "password": "SecurePass123!"
+}</pre></div>
+            <div class="flex items-center gap-2 mb-2"><span class="btnv"><i class="fa-solid fa-paper-plane"></i> Send Request</span><span class="chip bg-emerald-100 text-emerald-700">201 Created</span><span class="text-[10px] text-slate-400 ml-auto">142ms</span></div>
+            <div class="card" style="background:#0f172a;"><pre class="text-[10px] text-emerald-300 leading-relaxed">{ "account": { "id": 512, "email": "newstudent@example.com", ... } }</pre></div>
+        </div>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-6 items-start">
+        <div>
+            <h4 class="font-bold text-slate-900 text-sm mb-3">Error responses</h4>
+            <div class="card p-0 overflow-hidden mb-3">
+                <div class="trow font-black text-slate-500 bg-slate-50" style="grid-template-columns:1.6fr .6fr 2fr;"><div>Code</div><div>HTTP</div><div>Meaning</div></div>
+                <div class="trow" style="grid-template-columns:1.6fr .6fr 2fr;"><div><code>INVALID_API_KEY</code></div><div>401</div><div>Key not found / malformed</div></div>
+                <div class="trow" style="grid-template-columns:1.6fr .6fr 2fr;"><div><code>KEY_EXPIRED</code></div><div>401</div><div>Key past expiration</div></div>
+                <div class="trow" style="grid-template-columns:1.6fr .6fr 2fr;"><div><code>KEY_INACTIVE</code></div><div>401</div><div>Key revoked</div></div>
+                <div class="trow" style="grid-template-columns:1.6fr .6fr 2fr;"><div><code>SCOPE_DENIED</code></div><div>403</div><div>Key lacks the scope</div></div>
+                <div class="trow" style="grid-template-columns:1.6fr .6fr 2fr;"><div><code>QUOTA_EXCEEDED</code></div><div>403</div><div>Subscription limit reached</div></div>
+                <div class="trow" style="grid-template-columns:1.6fr .6fr 2fr;"><div><code>NOT_FOUND</code></div><div>404</div><div>Not in your institution</div></div>
+                <div class="trow" style="grid-template-columns:1.6fr .6fr 2fr; border-bottom:none;"><div><code>CONFLICT</code></div><div>409</div><div>Duplicate (e.g. ULI)</div></div>
+            </div>
+            <div class="bg-slate-900 rounded-2xl p-4 overflow-x-auto"><pre class="text-[10px] text-slate-300 leading-relaxed">{
+  "error": {
+    "code": "QUOTA_EXCEEDED",
+    "message": "Student account quota exceeded."
+  }
+}</pre></div>
+        </div>
+        <div>
+            <h4 class="font-bold text-slate-900 text-sm mb-3">Pagination &amp; rate limits</h4>
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 text-xs text-slate-600 mb-3">
+                <b class="text-slate-900">Pagination.</b> List endpoints accept <code>limit</code> (default 50, max 200) and <code>offset</code>. Responses include <code>total</code>, <code>limit</code>, <code>offset</code>.
+            </div>
+            <div class="card p-0 overflow-hidden">
+                <div class="trow font-black text-slate-500 bg-slate-50" style="grid-template-columns:2fr 1fr 1.4fr;"><div>Request type</div><div>Limit</div><div>Window</div></div>
+                <div class="trow" style="grid-template-columns:2fr 1fr 1.4fr;"><div>GET</div><div>120</div><div>per min / key</div></div>
+                <div class="trow" style="grid-template-columns:2fr 1fr 1.4fr;"><div>POST / PATCH / DELETE</div><div>60</div><div>per min / key</div></div>
+                <div class="trow" style="grid-template-columns:2fr 1fr 1.4fr; border-bottom:none;"><div>Bulk endpoints</div><div>10</div><div>per min / key</div></div>
+            </div>
+            <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 mt-3 text-xs text-emerald-800"><b><i class="fa-solid fa-shield-halved mr-1"></i> Safe by design.</b> Every request is scoped to your institution and logged. Writes (create student, enroll) still consume your subscription quota, just like the dashboard.</div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════ TEACHER: DASHBOARD ══════════ -->
+<section id="teacher-dashboard" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-emerald-100 text-emerald-600">TEACHER</span><h2 class="text-2xl font-black text-slate-900">Teacher Nexus (Dashboard)</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">Teachers see only the courses/sections a Staff member has assigned to them. The dashboard shows your courses with stats, lets you open each course's students and read-only content, and view any student's assessment attempts question-by-question.</p>
+
+    <div class="ui mb-6">
+        <div class="ui-bar"><span class="ui-dot bg-red-400"></span><span class="ui-dot bg-amber-400"></span><span class="ui-dot bg-emerald-400"></span><span class="ui-title">Teacher Nexus</span></div>
+        <div class="ui-body">
+            <div class="app-shell rounded-xl overflow-hidden">
+                <div class="app-side">
+                    <div class="brand"><div class="h-6 w-6 rounded-lg bg-violet-600 flex items-center justify-center"><i class="fa-solid fa-graduation-cap text-white text-[10px]"></i></div><span class="text-white text-[11px] font-black">AI Genesis</span></div>
+                    <div class="app-item on"><i class="fa-solid fa-chalkboard"></i> Teacher Nexus</div>
+                    <div class="app-item"><i class="fa-solid fa-chart-line"></i> Student Tracker</div>
+                    <div class="app-item"><i class="fa-solid fa-user"></i> Profile</div>
+                </div>
+                <div class="app-main">
+                    <div class="app-h"><p class="text-[13px] font-black text-slate-900">My Courses</p></div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="card"><p class="text-[11px] font-black text-slate-800">Cookery NC II · SEC-A</p><p class="text-[10px] text-slate-400 mb-1.5">38 students</p><div class="h-1.5 rounded-full bg-slate-100 overflow-hidden"><div class="h-full bg-emerald-500" style="width:62%"></div></div><p class="text-[10px] text-slate-400 mt-1">62% avg progress</p></div>
+                        <div class="card"><p class="text-[11px] font-black text-slate-800">Bread &amp; Pastry · BATCH-3</p><p class="text-[10px] text-slate-400 mb-1.5">29 students</p><div class="h-1.5 rounded-full bg-slate-100 overflow-hidden"><div class="h-full bg-blue-500" style="width:44%"></div></div><p class="text-[10px] text-slate-400 mt-1">44% avg progress</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="grid sm:grid-cols-3 gap-4">
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 text-xs text-slate-600"><b class="text-slate-900">Course content</b> is read-only for teachers — including a slide-deck viewer with fullscreen.</div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 text-xs text-slate-600"><b class="text-slate-900">Per-student view</b> shows each learner's module progress and assessment history.</div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 text-xs text-slate-600"><b class="text-slate-900">Attempt detail</b> lets you review every question and the student's answer (correct/incorrect).</div>
+    </div>
+</section>
+
+<!-- ══════════ TEACHER: TRACKER ══════════ -->
+<section id="teacher-tracker" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-emerald-100 text-emerald-600">TEACHER</span><h2 class="text-2xl font-black text-slate-900">Student Tracker &amp; At-Risk Detection</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">A consolidated list of all your students across every assigned course, with automatic <b>at-risk</b> flagging so you can intervene early. Filter by course, search, and open a detail drawer with module and assessment tabs.</p>
+    <div class="ui mb-5">
+        <div class="ui-bar"><span class="ui-dot bg-red-400"></span><span class="ui-dot bg-amber-400"></span><span class="ui-dot bg-emerald-400"></span><span class="ui-title">Student Tracker</span></div>
+        <div class="ui-body">
+            <div class="card p-0 overflow-hidden">
+                <div class="trow font-black text-slate-500 bg-slate-50" style="grid-template-columns:1.6fr 1.4fr 1fr .9fr;"><div>Student</div><div>Course</div><div>Progress</div><div>Status</div></div>
+                <div class="trow" style="grid-template-columns:1.6fr 1.4fr 1fr .9fr;"><div><b>Maria Santos</b></div><div>Cookery · SEC-A</div><div>88%</div><div><span class="chip bg-emerald-100 text-emerald-700">On-track</span></div></div>
+                <div class="trow" style="grid-template-columns:1.6fr 1.4fr 1fr .9fr;"><div><b>Pedro Reyes</b></div><div>Cookery · SEC-A</div><div>12%</div><div><span class="chip bg-amber-100 text-amber-700">At-risk</span></div></div>
+                <div class="trow" style="grid-template-columns:1.6fr 1.4fr 1fr .9fr; border-bottom:none;"><div><b>Ana Cruz</b></div><div>Bread · BATCH-3</div><div>0%</div><div><span class="chip bg-rose-100 text-rose-700">Inactive</span></div></div>
+            </div>
+        </div>
+    </div>
+    <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 text-xs text-emerald-800"><b><i class="fa-solid fa-triangle-exclamation mr-1"></i> How "at-risk" is decided.</b> A student is flagged when they're suspended, or have low/no progress after 7–14 days, or have used up all attempts on an assessment without passing.</div>
+</section>
+
+<!-- ══════════ TEACHER: GRADING ══════════ -->
+<section id="teacher-grading" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-emerald-100 text-emerald-600">TEACHER</span><h2 class="text-2xl font-black text-slate-900">Grading &amp; Review (Essays, Activities, Code)</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">Multiple-choice is graded instantly. Open-ended answers (essay, activity, code) are graded by AI against a rubric — and you can review and <b>override</b> any AI score with your own mark and feedback. Your grade always takes precedence.</p>
+    <div class="grid lg:grid-cols-2 gap-6 items-start">
+        <div class="ui">
+            <div class="ui-bar"><span class="ui-dot bg-red-400"></span><span class="ui-dot bg-amber-400"></span><span class="ui-dot bg-emerald-400"></span><span class="ui-title">Essay Submission — Review</span></div>
+            <div class="ui-body">
+                <div class="card mb-2"><p class="text-[10px] font-black uppercase text-slate-400 mb-1">Question</p><p class="text-[11px] text-slate-700">Explain the correct steps for safe knife handling.</p></div>
+                <div class="card mb-2"><div class="flex items-center justify-between mb-1"><p class="text-[10px] font-black uppercase text-slate-400">AI Score</p><span class="chip bg-blue-100 text-blue-700">8 / 10</span></div><p class="text-[11px] text-slate-500 italic">"Covers grip and cutting technique; missing storage step."</p></div>
+                <div class="card"><div class="flex items-center justify-between mb-1"><p class="text-[10px] font-black uppercase text-emerald-600">Your Override</p><span class="chip bg-emerald-100 text-emerald-700">9 / 10</span></div><div class="btng w-full justify-center py-1.5 mt-1"><i class="fa-solid fa-check"></i> Save Override</div></div>
+            </div>
+        </div>
+        <div>
+            <ul class="space-y-2.5 text-xs text-slate-600">
+                <li class="flex gap-2"><i class="fa-solid fa-check text-emerald-500 mt-0.5"></i> Filter submissions by <b>status</b> (pending / AI-graded / teacher-reviewed), course, and assessment.</li>
+                <li class="flex gap-2"><i class="fa-solid fa-check text-emerald-500 mt-0.5"></i> Each AI grade includes a <b>rubric breakdown and feedback</b> you can accept or change.</li>
+                <li class="flex gap-2"><i class="fa-solid fa-check text-emerald-500 mt-0.5"></i> Your <b>override</b> recalculates the attempt score immediately and marks it teacher-reviewed.</li>
+                <li class="flex gap-2"><i class="fa-solid fa-check text-emerald-500 mt-0.5"></i> If the institution's AI grading credits run out, answers simply wait in your <b>pending</b> queue for manual grading — students are never blocked.</li>
+            </ul>
+            <div class="bg-amber-50 border border-amber-100 rounded-2xl p-4 mt-4 text-xs text-amber-800"><b><i class="fa-solid fa-pen-ruler mr-1"></i> Grading credits.</b> Each AI-graded answer uses <b>1 grading credit</b>. Staff can top up and press "Resume AI grading" to clear a backlog.</div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ══════════ STUDENT: LOGIN ══════════ -->
+<section id="student-login" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-amber-100 text-amber-600">STUDENT</span><h2 class="text-2xl font-black text-slate-900">Logging In as a Student</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">Go to your institution's landing page, choose the <b>Student</b> tab, and sign in with the email and password your institution gave you. Once in, you land on <b>My Portal</b>.</p>
+    <div class="grid sm:grid-cols-3 gap-4">
+        <div class="bg-white border border-slate-200 rounded-2xl p-4"><div class="text-amber-500 mb-2"><i class="fa-solid fa-1"></i></div><h5 class="font-bold text-xs text-slate-900 mb-1">Find your institution</h5><p class="text-[11px] text-slate-500">Open the public home page and search for your school by name or code, then click it.</p></div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-4"><div class="text-amber-500 mb-2"><i class="fa-solid fa-2"></i></div><h5 class="font-bold text-xs text-slate-900 mb-1">Student tab</h5><p class="text-[11px] text-slate-500">Make sure the <b>Student</b> tab is selected, then enter your email and password.</p></div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-4"><div class="text-amber-500 mb-2"><i class="fa-solid fa-3"></i></div><h5 class="font-bold text-xs text-slate-900 mb-1">My Portal</h5><p class="text-[11px] text-slate-500">You'll see your enrolled courses with progress rings. Use Course Catalog to find more.</p></div>
+    </div>
+</section>
+
+<!-- ══════════ STUDENT: CATALOG ══════════ -->
+<section id="student-catalog" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-amber-100 text-amber-600">STUDENT</span><h2 class="text-2xl font-black text-slate-900">Course Catalog &amp; Self-Enrollment</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">Browse courses you're allowed to see and enroll yourself in eligible ones. Some courses are enrolled for you by Staff instead.</p>
+    <div class="ui mb-5">
+        <div class="ui-bar"><span class="ui-dot bg-red-400"></span><span class="ui-dot bg-amber-400"></span><span class="ui-dot bg-emerald-400"></span><span class="ui-title">Course Catalog</span></div>
+        <div class="ui-body">
+            <div class="grid grid-cols-3 gap-2">
+                <div class="card"><div class="h-14 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 mb-2"></div><p class="text-[11px] font-black text-slate-800">Cookery NC II</p><p class="text-[10px] text-slate-400 mb-1.5">Tourism · Level II</p><div class="btng w-full justify-center py-1"><i class="fa-solid fa-plus"></i> Enroll</div></div>
+                <div class="card"><div class="h-14 rounded-lg bg-gradient-to-br from-blue-400 to-indigo-500 mb-2"></div><p class="text-[11px] font-black text-slate-800">Bread &amp; Pastry</p><p class="text-[10px] text-slate-400 mb-1.5">Tourism · Level II</p><span class="chip bg-emerald-100 text-emerald-700 w-full justify-center py-1">Enrolled</span></div>
+                <div class="card"><div class="h-14 rounded-lg bg-gradient-to-br from-emerald-400 to-teal-500 mb-2"></div><p class="text-[11px] font-black text-slate-800">Bookkeeping</p><p class="text-[10px] text-slate-400 mb-1.5">Business · Level III</p><div class="btng w-full justify-center py-1"><i class="fa-solid fa-plus"></i> Enroll</div></div>
+            </div>
+        </div>
+    </div>
+    <div class="bg-amber-50 border border-amber-100 rounded-2xl p-4 text-xs text-amber-800"><b><i class="fa-solid fa-eye mr-1"></i> What you can see:</b> <b>Public</b> courses are open to all students; <b>Institution</b> courses only to your school's students; <b>Private</b> courses are enrolled by Staff. Search with the debounced search box and filter by institution.</div>
+</section>
+
+<!-- ══════════ STUDENT: LEARNING ══════════ -->
+<section id="student-learning" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-amber-100 text-amber-600">STUDENT</span><h2 class="text-2xl font-black text-slate-900">The Learning Experience</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">Open a course to read lessons, watch videos, download files, and mark modules complete. Your progress ring updates as you go.</p>
+    <div class="ui mb-5">
+        <div class="ui-bar"><span class="ui-dot bg-red-400"></span><span class="ui-dot bg-amber-400"></span><span class="ui-dot bg-emerald-400"></span><span class="ui-title">Cookery NC II — Learning</span></div>
+        <div class="ui-body">
+            <div class="app-shell rounded-xl overflow-hidden" style="background:#fff;">
+                <div class="app-side" style="background:#f8fafc; width:150px;">
+                    <p class="text-[10px] font-black text-slate-400 uppercase px-2 mb-1">Modules</p>
+                    <div class="app-item on" style="background:#ede9fe; color:#6d28d9;"><i class="fa-solid fa-circle-check"></i> Kitchen Safety</div>
+                    <div class="app-item" style="color:#475569;"><i class="fa-regular fa-circle"></i> Knife Skills</div>
+                    <div class="app-item" style="color:#475569;"><i class="fa-regular fa-circle"></i> Cooking Methods</div>
+                </div>
+                <div class="app-main" style="background:#fff;">
+                    <div class="flex items-center justify-between mb-2"><p class="text-[12px] font-black text-slate-900">Hazards in the Kitchen</p><svg width="42" height="42" viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="#e2e8f0" stroke-width="5"/><circle cx="28" cy="28" r="24" fill="none" stroke="#34d399" stroke-width="5" stroke-dasharray="150" stroke-dashoffset="45" stroke-linecap="round" transform="rotate(-90 28 28)"/><text x="28" y="33" text-anchor="middle" font-size="12" font-weight="900" fill="#0f172a">70%</text></svg></div>
+                    <div class="space-y-1 text-[11px] text-slate-500 mb-3"><div class="h-1.5 rounded bg-slate-100 w-full"></div><div class="h-1.5 rounded bg-slate-100 w-11/12"></div><div class="h-1.5 rounded bg-slate-100 w-4/5"></div></div>
+                    <div class="btng"><i class="fa-solid fa-check"></i> Mark Module Complete</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="grid sm:grid-cols-3 gap-4">
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 text-xs text-slate-600"><b class="text-slate-900">Progress ring</b> shows your overall % for the course; each module has its own completion bar.</div>
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 text-xs text-slate-600"><b class="text-slate-900">Mark complete</b> when you finish a module to advance your progress.</div>
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 text-xs text-slate-600"><b class="text-slate-900">Mixed media</b> — lessons can include text, video, downloadable files and external links.</div>
+    </div>
+</section>
+
+<!-- ══════════ STUDENT: ASSESSMENTS ══════════ -->
+<section id="student-assessments" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-amber-100 text-amber-600">STUDENT</span><h2 class="text-2xl font-black text-slate-900">Taking Assessments</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">Assessments are timed quizzes. Multiple-choice is scored instantly; essay/activity/code answers are graded by AI (and may be reviewed by your teacher). You get a limited number of attempts.</p>
+    <div class="ui mb-5">
+        <div class="ui-bar"><span class="ui-dot bg-red-400"></span><span class="ui-dot bg-amber-400"></span><span class="ui-dot bg-emerald-400"></span><span class="ui-title">Final Assessment — in progress</span></div>
+        <div class="ui-body">
+            <div class="flex items-center justify-between mb-3"><span class="chip bg-slate-100 text-slate-600">Question 5 / 20</span><span class="chip bg-rose-100 text-rose-700"><i class="fa-solid fa-clock"></i> 42:15 left</span></div>
+            <div class="card mb-2"><p class="text-[12px] font-bold text-slate-800 mb-2">Which is the safest way to pass a knife to a colleague?</p>
+                <div class="space-y-1.5">
+                    <div class="border border-slate-200 rounded-lg px-3 py-1.5 text-[11px] text-slate-600">Blade first, quickly</div>
+                    <div class="border-2 border-violet-500 bg-violet-50 rounded-lg px-3 py-1.5 text-[11px] text-violet-700 font-bold">Handle first, set it down on the counter</div>
+                    <div class="border border-slate-200 rounded-lg px-3 py-1.5 text-[11px] text-slate-600">Toss it gently</div>
+                </div>
+            </div>
+            <div class="flex justify-between"><span class="chip bg-slate-100 text-slate-500">Previous</span><div class="btnv"><i class="fa-solid fa-arrow-right"></i> Next</div></div>
+        </div>
+    </div>
+    <div class="bg-amber-50 border border-amber-100 rounded-2xl p-4 text-xs text-amber-800"><b><i class="fa-solid fa-clock mr-1"></i> Watch the timer.</b> Timed assessments auto-submit when time runs out. Your score is the % of items correct; you pass if you meet the passing score. Essay answers may show as "awaiting grading" until AI or your teacher grades them.</div>
+</section>
+
+<!-- ══════════ STUDENT: CERTIFICATES ══════════ -->
+<section id="student-certificates" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-amber-100 text-amber-600">STUDENT</span><h2 class="text-2xl font-black text-slate-900">Certificates</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">Finish <b>all modules</b> and pass <b>all assessments</b> and your course auto-completes — unlocking a downloadable PDF certificate with a QR code that anyone can use to verify it online.</p>
+    <div class="grid lg:grid-cols-2 gap-6 items-center">
+        <div class="ui">
+            <div class="ui-bar"><span class="ui-dot bg-red-400"></span><span class="ui-dot bg-amber-400"></span><span class="ui-dot bg-emerald-400"></span><span class="ui-title">Certificate of Completion</span></div>
+            <div class="ui-body">
+                <div class="card text-center py-5 border-2 border-amber-200">
+                    <i class="fa-solid fa-certificate text-amber-400 text-2xl mb-2"></i>
+                    <p class="text-[10px] uppercase tracking-widest text-slate-400">Certificate of Completion</p>
+                    <p class="text-sm font-black text-slate-900 my-1">Juan Dela Cruz</p>
+                    <p class="text-[11px] text-slate-500">Cookery NC II</p>
+                    <div class="h-10 w-10 bg-slate-900 rounded mx-auto mt-3 flex items-center justify-center text-white"><i class="fa-solid fa-qrcode"></i></div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="steps space-y-5">
+                <div class="step"><h4 class="font-bold text-sm text-slate-900">Complete everything</h4><p class="text-xs text-slate-500 mt-1">All modules marked complete <b>and</b> every assessment passed.</p></div>
+                <div class="step"><h4 class="font-bold text-sm text-slate-900">Certificate unlocks</h4><p class="text-xs text-slate-500 mt-1">The lock icon on your course card turns into a <b>Download Certificate</b> button.</p></div>
+                <div class="step"><h4 class="font-bold text-sm text-slate-900">Download &amp; share</h4><p class="text-xs text-slate-500 mt-1">Get the PDF and share the verification link — no login needed to verify.</p></div>
+            </div>
+            <div class="bg-amber-50 border border-amber-100 rounded-2xl p-4 mt-4 text-xs text-amber-800"><b><i class="fa-solid fa-qrcode mr-1"></i> Verifiable.</b> Each certificate carries a secure QR code / link so employers can confirm it's genuine.</div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════ PROFILE ══════════ -->
+<section id="profile" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-slate-200 text-slate-600">ALL ROLES</span><h2 class="text-2xl font-black text-slate-900">Your Profile</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">Everyone has a Profile page (open it from the user card at the bottom of the menu). Update your display name and email, and change your password — changing your password requires entering your current one.</p>
+    <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100 text-xs text-slate-600 max-w-2xl">
+        <ul class="space-y-2">
+            <li class="flex gap-2"><i class="fa-solid fa-check text-emerald-500 mt-0.5"></i> Edit your <b>full name</b> and <b>email</b> (email must stay unique).</li>
+            <li class="flex gap-2"><i class="fa-solid fa-check text-emerald-500 mt-0.5"></i> <b>Change password</b> — you must confirm your current password first.</li>
+        </ul>
+    </div>
+</section>
+
+<!-- ══════════ SECURITY ══════════ -->
+<section id="security" class="mb-16 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-slate-200 text-slate-600">PLATFORM</span><h2 class="text-2xl font-black text-slate-900">Security &amp; Privacy</h2></div>
+    <p class="text-slate-500 text-sm mb-6 max-w-3xl">Your institution's data is isolated and protected. Here's what keeps it safe.</p>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="bg-white border border-slate-200 rounded-2xl p-5"><div class="h-9 w-9 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mb-2"><i class="fa-solid fa-user-lock"></i></div><h5 class="font-bold text-sm text-slate-900 mb-1">Institution isolation</h5><p class="text-[11px] text-slate-500">Staff and teachers only ever see their own institution's accounts, courses and data.</p></div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-5"><div class="h-9 w-9 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-2"><i class="fa-solid fa-key"></i></div><h5 class="font-bold text-sm text-slate-900 mb-1">Strong passwords</h5><p class="text-[11px] text-slate-500">Passwords are hashed with bcrypt (never stored in plain text). Deactivated accounts can't log in.</p></div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-5"><div class="h-9 w-9 rounded-xl bg-violet-100 text-violet-600 flex items-center justify-center mb-2"><i class="fa-solid fa-shield-halved"></i></div><h5 class="font-bold text-sm text-slate-900 mb-1">Secure sessions</h5><p class="text-[11px] text-slate-500">Login uses a secure, browser-only session token that expires after 24 hours. Login attempts are rate-limited.</p></div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-5"><div class="h-9 w-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center mb-2"><i class="fa-solid fa-code"></i></div><h5 class="font-bold text-sm text-slate-900 mb-1">Safe content</h5><p class="text-[11px] text-slate-500">Lesson content is sanitized before it's saved, preventing malicious code from being injected.</p></div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-5"><div class="h-9 w-9 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center mb-2"><i class="fa-solid fa-list-check"></i></div><h5 class="font-bold text-sm text-slate-900 mb-1">Audit &amp; API logs</h5><p class="text-[11px] text-slate-500">Sensitive changes and every external API request are logged for accountability.</p></div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-5"><div class="h-9 w-9 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center mb-2"><i class="fa-solid fa-hashtag"></i></div><h5 class="font-bold text-sm text-slate-900 mb-1">Scoped API keys</h5><p class="text-[11px] text-slate-500">Integration keys are hashed, scoped to specific actions, and limited to your institution's data.</p></div>
+    </div>
+</section>
+
+<!-- ══════════ FAQ ══════════ -->
+<section id="faq" class="mb-20 scroll-mt-8">
+    <div class="flex items-center gap-3 mb-2"><span class="tag bg-slate-200 text-slate-600">HELP</span><h2 class="text-2xl font-black text-slate-900">Frequently Asked Questions</h2></div>
+    <div class="space-y-3 mt-6">
+        <details class="group bg-white border border-slate-200 rounded-2xl p-4" open>
+            <summary class="flex items-center justify-between cursor-pointer font-bold text-sm text-slate-900"><span>I can't log in — what should I check?</span><i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition"></i></summary>
+            <p class="text-xs text-slate-500 mt-3">Make sure you're on your institution's landing page (URL ends with your code), on the correct tab (<b>Student</b> vs <b>Staff/Teacher</b>), and that your account is active. If unsure, ask your institution's Staff to confirm your account.</p>
+        </details>
+        <details class="group bg-white border border-slate-200 rounded-2xl p-4">
+            <summary class="flex items-center justify-between cursor-pointer font-bold text-sm text-slate-900"><span>Who can create accounts?</span><i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition"></i></summary>
+            <p class="text-xs text-slate-500 mt-3">Staff create all accounts for the institution (Student, Teacher, Staff, and Content Builder). Students cannot self-register.</p>
+        </details>
+        <details class="group bg-white border border-slate-200 rounded-2xl p-4">
+            <summary class="flex items-center justify-between cursor-pointer font-bold text-sm text-slate-900"><span>What's the difference between a course and a course instance?</span><i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition"></i></summary>
+            <p class="text-xs text-slate-500 mt-3">A <b>course</b> is the master content (modules, lessons, exams). A <b>course instance</b> is a specific section/batch of that course with its own dates and cap. Students enroll into instances; content is shared, never duplicated.</p>
+        </details>
+        <details class="group bg-white border border-slate-200 rounded-2xl p-4">
+            <summary class="flex items-center justify-between cursor-pointer font-bold text-sm text-slate-900"><span>What are AI credits and what happens when they run out?</span><i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition"></i></summary>
+            <p class="text-xs text-slate-500 mt-3">Credits meter AI usage across four pools (CS/CBC, Course Content, Slides, Grading). When a pool is empty, that AI action pauses until your plan is topped up. Essay grading is special: when its credits run out, essays simply wait for a teacher to grade them manually — students are never blocked.</p>
+        </details>
+        <details class="group bg-white border border-slate-200 rounded-2xl p-4">
+            <summary class="flex items-center justify-between cursor-pointer font-bold text-sm text-slate-900"><span>Is there an "uploader" account?</span><i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition"></i></summary>
+            <p class="text-xs text-slate-500 mt-3">The account that builds and uploads content is called <b>Developer</b> (Content Builder) in the system. There is no separate "uploader" role — the Content Builder is that role.</p>
+        </details>
+        <details class="group bg-white border border-slate-200 rounded-2xl p-4">
+            <summary class="flex items-center justify-between cursor-pointer font-bold text-sm text-slate-900"><span>How does a student earn a certificate?</span><i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition"></i></summary>
+            <p class="text-xs text-slate-500 mt-3">Complete every module and pass every assessment in the course. The course then auto-completes and a verifiable PDF certificate (with QR code) becomes available to download.</p>
+        </details>
+        <details class="group bg-white border border-slate-200 rounded-2xl p-4">
+            <summary class="flex items-center justify-between cursor-pointer font-bold text-sm text-slate-900"><span>Can I trust AI-graded essays?</span><i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition"></i></summary>
+            <p class="text-xs text-slate-500 mt-3">AI grades against your rubric and gives feedback, but a teacher can review and <b>override</b> any AI score. The teacher's grade always wins.</p>
+        </details>
+    </div>
+    <div class="mt-10 text-center text-xs text-slate-400 border-t border-slate-100 pt-6">
+        AI Genesis · Institutional User Guide · Every screen shown reflects the live platform.
+    </div>
+</section>
+</main>
+
+<script>
+// Mobile sidebar toggle
+function ugToggle(){
+    document.getElementById('ug-sidebar').classList.toggle('open');
+    document.getElementById('ug-overlay').classList.toggle('hidden');
+}
+// Close sidebar on nav click (mobile) + scroll-spy active state
+(function(){
+    const links = Array.from(document.querySelectorAll('#ug-nav a'));
+    const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    links.forEach(a => a.addEventListener('click', () => {
+        if (window.innerWidth < 1024) ugToggle();
+    }));
+    const spy = () => {
+        let cur = sections[0];
+        const y = window.scrollY + 120;
+        for (const s of sections) { if (s.offsetTop <= y) cur = s; }
+        links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + (cur && cur.id)));
+    };
+    window.addEventListener('scroll', spy, {passive:true});
+    window.addEventListener('load', spy);
+    spy();
+})();
+</script>
+</body>
+</html>
