@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AI Genesis — Interactive</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+    *{font-family:'Inter',sans-serif;box-sizing:border-box;}
+    html,body{height:100%;margin:0;overflow:hidden;}
+    [data-theme="dark"]{--bg1:#0b1020;--bg2:#12203f;--bg3:#1e1b4b;--bg4:#0f172a;--text:#e2e8f0;--muted:#8b93a7;--faint:#64748b;--rail:rgba(255,255,255,.04);--rail-bd:rgba(255,255,255,.07);--glass:rgba(255,255,255,.05);--glass-bd:rgba(255,255,255,.10);--glass-hi:rgba(255,255,255,.08);--track:rgba(255,255,255,.12);--card:rgba(255,255,255,.05);--blob:.35;}
+    [data-theme="light"]{--bg1:#eef2ff;--bg2:#e0e7ff;--bg3:#f5f3ff;--bg4:#e2e8f0;--text:#0f172a;--muted:#475569;--faint:#94a3b8;--rail:rgba(255,255,255,.7);--rail-bd:rgba(15,23,42,.08);--glass:rgba(255,255,255,.75);--glass-bd:rgba(15,23,42,.08);--glass-hi:rgba(255,255,255,.95);--track:rgba(15,23,42,.10);--card:rgba(255,255,255,.7);--blob:.28;}
+    body{background:var(--bg4);color:var(--text);transition:color .3s;}
+    ::selection{background:#6366f1;color:#fff;}
+    #bg{position:fixed;inset:0;z-index:0;background:linear-gradient(-45deg,var(--bg1),var(--bg2),var(--bg3),var(--bg4));background-size:400% 400%;animation:g 22s ease infinite;transition:background .4s;}
+    @keyframes g{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}
+    .blob{position:fixed;border-radius:50%;filter:blur(80px);opacity:var(--blob);z-index:0;animation:fl 16s ease-in-out infinite;}
+    @keyframes fl{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,-30px) scale(1.2)}}
+    .app{position:fixed;inset:0;z-index:10;display:flex;}
+    .rail{width:78px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;padding:14px 0;gap:5px;background:var(--rail);border-right:1px solid var(--rail-bd);backdrop-filter:blur(10px);}
+    .rail-item{width:54px;height:50px;border-radius:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--muted);cursor:pointer;transition:all .2s;font-size:9px;font-weight:800;}
+    .rail-item i{font-size:15px;}
+    .rail-item:hover{background:var(--glass-hi);color:var(--text);}
+    .rail-item.active{background:linear-gradient(135deg,#6366f1,#3b82f6);color:#fff;box-shadow:0 8px 20px rgba(79,70,229,.4);}
+    .stage{flex:1;position:relative;overflow:hidden;}
+    .panel{position:absolute;inset:0;padding:28px 44px 60px;display:flex;flex-direction:column;opacity:0;transform:translateX(40px) scale(.985);pointer-events:none;transition:opacity .5s cubic-bezier(.22,1,.36,1),transform .5s cubic-bezier(.22,1,.36,1);}
+    .panel.active{opacity:1;transform:none;pointer-events:auto;}
+    .panel.leaving{opacity:0;transform:translateX(-40px) scale(.985);}
+    .glass{background:var(--glass);border:1px solid var(--glass-bd);backdrop-filter:blur(6px);}
+    .chip{display:inline-flex;align-items:center;gap:.4rem;padding:.32rem .72rem;border-radius:.65rem;font-size:.7rem;font-weight:700;}
+    .grad-text{background:linear-gradient(90deg,#6366f1,#3b82f6);-webkit-background-clip:text;background-clip:text;color:transparent;}
+    .btn{cursor:pointer;transition:transform .15s,box-shadow .2s,background .2s;}.btn:hover{transform:translateY(-2px);}
+    .primary{background:linear-gradient(135deg,#6366f1,#3b82f6);color:#fff;box-shadow:0 8px 24px rgba(79,70,229,.35);}
+    .lift{transition:transform .2s,border-color .2s,background .2s;cursor:pointer;}.lift:hover{transform:translateY(-4px);border-color:#818cf8;background:var(--glass-hi);}
+    .icon-box{height:2.3rem;width:2.3rem;border-radius:.72rem;display:flex;align-items:center;justify-content:center;}
+    .muted{color:var(--muted);}.faint{color:var(--faint);}
+    .fade-in{animation:fi .45s ease both;}@keyframes fi{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+    .ringfill{stroke-linecap:round;transition:stroke-dashoffset 1s ease;}
+    .dot{width:7px;height:7px;border-radius:50%;background:var(--track);transition:all .3s;cursor:pointer;}.dot.active{background:#6366f1;width:22px;border-radius:6px;}
+    .barwrap{height:13px;border-radius:8px;background:var(--track);overflow:hidden;}
+    .bar{height:100%;border-radius:8px;width:0;transition:width .9s cubic-bezier(.22,1,.36,1);}
+    h1,h2{letter-spacing:-.02em;}
+    .scrollable{overflow:auto;}.scrollable::-webkit-scrollbar{width:6px}.scrollable::-webkit-scrollbar-thumb{background:var(--track);border-radius:6px}
+    .logline{opacity:0;transform:translateX(-8px);transition:all .4s;}.logline.on{opacity:1;transform:none;}
+    /* app-window mockups */
+    .win{border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.08);box-shadow:0 20px 50px rgba(2,6,23,.28);width:100%;background:#0b1224;}
+    .win-bar{height:26px;background:#0f172a;display:flex;align-items:center;gap:6px;padding:0 10px;border-bottom:1px solid rgba(255,255,255,.06);}
+    .win-dot{width:8px;height:8px;border-radius:50%;}
+    .win-body{display:flex;background:#0f172a;color:#e2e8f0;}
+    .win-side{width:42px;background:#0b1220;border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:5px;}
+    .win-ic{width:28px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#64748b;font-size:11px;}
+    .win-ic.on{background:linear-gradient(135deg,#6366f1,#3b82f6);color:#fff;}
+    .win-main{flex:1;padding:11px 13px;overflow:hidden;}
+    .win-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;}
+    .win-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:9px;}
+    .win-pill{font-size:8.5px;font-weight:800;padding:2px 6px;border-radius:5px;display:inline-flex;align-items:center;gap:3px;}
+    .win-bar-track{height:6px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden;}
+    .win-btn{background:linear-gradient(135deg,#6366f1,#3b82f6);color:#fff;font-size:9px;font-weight:800;padding:4px 8px;border-radius:6px;display:inline-flex;align-items:center;gap:4px;}
+    /* journey pipeline */
+    .pipe{display:flex;align-items:stretch;gap:0;width:100%;}
+    .stage-card{flex:1;position:relative;border-radius:14px;padding:14px 12px;background:var(--glass);border:1px solid var(--glass-bd);opacity:.5;transform:translateY(8px);transition:all .5s;}
+    .stage-card.on{opacity:1;transform:none;border-color:#818cf8;box-shadow:0 10px 30px rgba(79,70,229,.25);}
+    .stage-conn{width:26px;display:flex;align-items:center;justify-content:center;color:var(--faint);flex-shrink:0;}
+    .stage-conn i{transition:color .4s;}
+    .stage-conn.on i{color:#818cf8;}
+    .stage-ic{height:40px;width:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;transition:transform .4s;}
+    .stage-card.on .stage-ic{transform:scale(1.08);}
+    @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(129,140,248,.5)}50%{box-shadow:0 0 0 10px rgba(129,140,248,0)}}
+    .pulse{animation:pulse 1.6s infinite;}
+    /* trust shield */
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes rev{to{transform:rotate(-360deg)}}
+    .orbit{animation:spin 18s linear infinite;}
+    .orbit2{animation:rev 24s linear infinite;}
+    @keyframes ping2{0%{transform:scale(1);opacity:.6}80%,100%{transform:scale(2.2);opacity:0}}
+    .ping-ring{animation:ping2 2.2s cubic-bezier(0,0,.2,1) infinite;}
+    .shield-glow{filter:drop-shadow(0 0 14px rgba(52,211,153,.5));}
+    input[type=range]{-webkit-appearance:none;height:6px;border-radius:6px;background:var(--track);outline:none;}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#6366f1;cursor:pointer;box-shadow:0 0 0 4px rgba(99,102,241,.22);}
+    @media (max-width:820px){.app{flex-direction:column-reverse;}.rail{width:100%;height:60px;flex-direction:row;justify-content:space-around;padding:0;border-right:none;border-top:1px solid var(--rail-bd);overflow-x:auto;gap:0;}.rail-item{flex-shrink:0;}.panel{padding:16px 14px 16px;}.hide-sm{display:none!important;}.pipe{flex-wrap:wrap;}.stage-conn{display:none;}.stage-card{flex:1 1 45%;}}
+    @media (max-height:680px){.panel{padding:14px 30px 52px;}}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<div class="blob" style="width:360px;height:360px;background:#6366f1;top:-80px;left:5%;"></div>
+<div class="blob" style="width:320px;height:320px;background:#3b82f6;bottom:-60px;right:8%;animation-delay:5s;"></div>
+
+<div class="app">
+    <nav class="rail">
+        <div class="rail-item active" data-go="home"><i class="fa-solid fa-house"></i><span>Home</span></div>
+        <div class="rail-item" data-go="build"><i class="fa-solid fa-wand-magic-sparkles"></i><span>AI Demo</span></div>
+        <div class="rail-item" data-go="platform"><i class="fa-solid fa-layer-group"></i><span>Platform</span></div>
+        <div class="rail-item" data-go="flow"><i class="fa-solid fa-diagram-project"></i><span>Journey</span></div>
+        <div class="rail-item" data-go="roles"><i class="fa-solid fa-users"></i><span>Roles</span></div>
+        <div class="rail-item" data-go="assess"><i class="fa-solid fa-clipboard-check"></i><span>Assess</span></div>
+        <div class="rail-item" data-go="why"><i class="fa-solid fa-bolt"></i><span>Why Us</span></div>
+        <div class="rail-item" data-go="trust"><i class="fa-solid fa-shield-halved"></i><span>Trust</span></div>
+        <div class="rail-item" data-go="pricing"><i class="fa-solid fa-coins"></i><span>Pricing</span></div>
+        <div class="rail-item" data-go="demo" style="margin-top:auto"><i class="fa-solid fa-calendar-check"></i><span>Demo</span></div>
+    </nav>
+
+    <div class="stage" id="stage">
+
+        <!-- HOME -->
+        <section class="panel active" data-panel="home">
+            <div class="flex-1 flex flex-col justify-center max-w-3xl">
+                <span class="chip glass text-emerald-400 w-max"><span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span> For TESDA TVIs &amp; Institutions</span>
+                <h1 class="text-5xl md:text-6xl font-black leading-[1.03] mt-5">Build entire courses <span class="grad-text">with AI.</span></h1>
+                <h1 class="text-4xl md:text-5xl font-black leading-[1.03]">Teach. Assess. Certify.</h1>
+                <p class="muted text-lg mt-5 max-w-xl leading-relaxed">One platform that <b class="grad-text">generates</b> your courses, exams, slide decks &amp; TESDA competency documents, auto-grades students, and issues verifiable certificates.</p>
+                <div class="flex flex-wrap gap-3 mt-8">
+                    <div class="btn primary chip px-6 py-3 text-sm" onclick="go('build')"><i class="fa-solid fa-play"></i> Watch AI build a course</div>
+                    <div class="btn glass chip px-6 py-3 text-sm" onclick="go('platform')"><i class="fa-solid fa-compass"></i> Explore the platform</div>
+                </div>
+                <div class="grid grid-cols-4 gap-5 mt-11 max-w-2xl">
+                    <div><p class="text-3xl font-black"><span class="ctr" data-t="10" data-s="×">0</span></p><p class="text-[11px] faint mt-1">faster to build</p></div>
+                    <div><p class="text-3xl font-black"><span class="ctr" data-t="5">0</span></p><p class="text-[11px] faint mt-1">roles, one app</p></div>
+                    <div><p class="text-3xl font-black"><span class="ctr" data-t="8">0</span></p><p class="text-[11px] faint mt-1">AI generators</p></div>
+                    <div><p class="text-3xl font-black"><span class="ctr" data-t="100" data-s="%">0</span></p><p class="text-[11px] faint mt-1">TESDA-aligned</p></div>
+                </div>
+            </div>
+            <p class="text-[11px] faint hide-sm">Click the icons on the left · use ← → keys · toggle light/dark below. Everything fits one screen — no scrolling.</p>
+        </section>
+
+        <!-- BUILD -->
+        <section class="panel" data-panel="build">
+            <div class="flex items-center justify-between">
+                <div><span class="chip glass text-indigo-400 w-max">LIVE DEMO</span><h2 class="text-3xl font-black mt-2">Watch AI build a course</h2></div>
+                <div class="btn primary chip px-5 py-2.5 text-sm" id="buildBtn" onclick="runBuild()"><i class="fa-solid fa-play"></i> Run build</div>
+            </div>
+            <div class="flex-1 grid md:grid-cols-2 gap-5 mt-4 min-h-0">
+                <div class="glass rounded-2xl p-5 flex flex-col min-h-0">
+                    <p class="text-[11px] font-black uppercase tracking-widest faint mb-3">Generation log</p>
+                    <div class="space-y-2.5 scrollable flex-1" id="buildLog">
+                        <div class="logline flex items-center gap-2 text-sm"><i class="fa-solid fa-list-check text-indigo-400 w-4"></i> Generating module list… <span class="chip glass ml-auto text-[10px] muted">3 credits</span></div>
+                        <div class="logline flex items-center gap-2 text-sm"><i class="fa-solid fa-file-lines text-blue-400 w-4"></i> Lessons: outline + 10 sections… <span class="chip glass ml-auto text-[10px] muted">~104 cr</span></div>
+                        <div class="logline flex items-center gap-2 text-sm"><i class="fa-solid fa-circle-question text-amber-400 w-4"></i> Exam bank (5 MCQ / section)… <span class="chip glass ml-auto text-[10px] muted">6 cr/sec</span></div>
+                        <div class="logline flex items-center gap-2 text-sm"><i class="fa-solid fa-images text-fuchsia-400 w-4"></i> Slides + AI images… <span class="chip glass ml-auto text-[10px] muted">~140 cr</span></div>
+                        <div class="logline flex items-center gap-2 text-sm"><i class="fa-solid fa-file-contract text-teal-400 w-4"></i> TESDA CS/CBC document… <span class="chip glass ml-auto text-[10px] muted">.docx</span></div>
+                        <div class="logline flex items-center gap-2 text-sm text-emerald-400 font-bold"><i class="fa-solid fa-circle-check w-4"></i> Course published · certificate enabled.</div>
+                    </div>
+                </div>
+                <div class="glass rounded-2xl p-5 flex flex-col items-center justify-center">
+                    <svg width="140" height="140" viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--track)" stroke-width="10"/><circle id="buildRing" class="ringfill" cx="60" cy="60" r="52" fill="none" stroke="#34d399" stroke-width="10" stroke-dasharray="327" stroke-dashoffset="327" transform="rotate(-90 60 60)"/><text id="buildPct" x="60" y="68" text-anchor="middle" font-size="26" font-weight="900" fill="currentColor">0%</text></svg>
+                    <div class="grid grid-cols-3 gap-2 mt-5 w-full" id="buildTiles">
+                        <div class="tile aspect-video rounded-lg glass flex items-center justify-center text-[10px] faint opacity-30">Modules</div>
+                        <div class="tile aspect-video rounded-lg glass flex items-center justify-center text-[10px] faint opacity-30">Lessons</div>
+                        <div class="tile aspect-video rounded-lg glass flex items-center justify-center text-[10px] faint opacity-30">Exams</div>
+                        <div class="tile aspect-video rounded-lg glass flex items-center justify-center text-[10px] faint opacity-30">Slides</div>
+                        <div class="tile aspect-video rounded-lg glass flex items-center justify-center text-[10px] faint opacity-30">CS/CBC</div>
+                        <div class="tile aspect-video rounded-lg glass flex items-center justify-center text-[10px] faint opacity-30">Cert</div>
+                    </div>
+                    <p class="text-[11px] faint mt-4 text-center">A typical 10-module course ≈ <b class="grad-text">1,400 AI credits</b>. By hand: weeks. With AI: minutes.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PLATFORM -->
+        <section class="panel" data-panel="platform">
+            <span class="chip glass text-indigo-400 w-max">THE PLATFORM</span>
+            <h2 class="text-3xl font-black mt-2">Tap a capability to see it in action</h2>
+            <div class="flex-1 grid md:grid-cols-[300px_1fr] gap-5 mt-4 min-h-0">
+                <div class="grid grid-cols-2 gap-2.5 content-start scrollable pr-1">
+                    <div class="feat lift glass rounded-xl p-3" data-feat="content"><div class="icon-box bg-violet-500/20 text-violet-400 mb-2"><i class="fa-solid fa-wand-magic-sparkles"></i></div><p class="font-black text-sm">AI content</p></div>
+                    <div class="feat lift glass rounded-xl p-3" data-feat="slides"><div class="icon-box bg-fuchsia-500/20 text-fuchsia-400 mb-2"><i class="fa-solid fa-images"></i></div><p class="font-black text-sm">AI slides</p></div>
+                    <div class="feat lift glass rounded-xl p-3" data-feat="cscbc"><div class="icon-box bg-indigo-500/20 text-indigo-400 mb-2"><i class="fa-solid fa-file-contract"></i></div><p class="font-black text-sm">CS &amp; CBC</p></div>
+                    <div class="feat lift glass rounded-xl p-3" data-feat="grade"><div class="icon-box bg-amber-500/20 text-amber-400 mb-2"><i class="fa-solid fa-pen-ruler"></i></div><p class="font-black text-sm">Auto-grading</p></div>
+                    <div class="feat lift glass rounded-xl p-3" data-feat="assess"><div class="icon-box bg-emerald-500/20 text-emerald-400 mb-2"><i class="fa-solid fa-clipboard-check"></i></div><p class="font-black text-sm">Assessments</p></div>
+                    <div class="feat lift glass rounded-xl p-3" data-feat="cert"><div class="icon-box bg-teal-500/20 text-teal-400 mb-2"><i class="fa-solid fa-certificate"></i></div><p class="font-black text-sm">Certificates</p></div>
+                    <div class="feat lift glass rounded-xl p-3" data-feat="track"><div class="icon-box bg-sky-500/20 text-sky-400 mb-2"><i class="fa-solid fa-chart-line"></i></div><p class="font-black text-sm">Tracker</p></div>
+                    <div class="feat lift glass rounded-xl p-3" data-feat="multi"><div class="icon-box bg-blue-500/20 text-blue-400 mb-2"><i class="fa-solid fa-building-columns"></i></div><p class="font-black text-sm">Multi-inst.</p></div>
+                    <div class="feat lift glass rounded-xl p-3" data-feat="api"><div class="icon-box bg-slate-400/20 text-slate-400 mb-2"><i class="fa-solid fa-plug"></i></div><p class="font-black text-sm">SIS API</p></div>
+                    <div class="feat lift glass rounded-xl p-3" data-feat="cloud"><div class="icon-box bg-cyan-500/20 text-cyan-400 mb-2"><i class="fa-solid fa-cloud"></i></div><p class="font-black text-sm">Cloud</p></div>
+                </div>
+                <div class="glass rounded-2xl p-5 grid md:grid-cols-2 gap-4 items-center min-h-0"><div id="featBody" class="fade-in"></div><div id="featMock" class="fade-in"></div></div>
+            </div>
+        </section>
+
+        <!-- JOURNEY (animated pipeline) -->
+        <section class="panel" data-panel="flow">
+            <div class="flex items-center justify-between">
+                <div><span class="chip glass text-indigo-400 w-max">HOW IT WORKS</span><h2 class="text-3xl font-black mt-2">From blank qualification → certified graduate</h2></div>
+                <div class="btn primary chip px-5 py-2.5 text-sm" onclick="runFlow()"><i class="fa-solid fa-play"></i> Play journey</div>
+            </div>
+            <div class="flex-1 flex flex-col justify-center">
+                <div class="pipe" id="pipe">
+                    <div class="stage-card" data-i="0"><div class="stage-ic bg-violet-500/20 text-violet-400"><i class="fa-solid fa-book-medical"></i></div><p class="font-black text-sm">1 · Create course</p><p class="text-[11px] muted mt-1">Sector + PQF level. Draft → Published. Set visibility.</p></div>
+                    <div class="stage-conn" data-i="0"><i class="fa-solid fa-chevron-right"></i></div>
+                    <div class="stage-card" data-i="1"><div class="stage-ic bg-fuchsia-500/20 text-fuchsia-400"><i class="fa-solid fa-wand-magic-sparkles"></i></div><p class="font-black text-sm">2 · AI builds content</p><p class="text-[11px] muted mt-1">Modules, 2-pass lessons, 5 MCQ/section, slide decks.</p></div>
+                    <div class="stage-conn" data-i="1"><i class="fa-solid fa-chevron-right"></i></div>
+                    <div class="stage-card" data-i="2"><div class="stage-ic bg-indigo-500/20 text-indigo-400"><i class="fa-solid fa-layer-group"></i></div><p class="font-black text-sm">3 · Open a section</p><p class="text-[11px] muted mt-1">Course instance with dates &amp; cap. Assign teachers.</p></div>
+                    <div class="stage-conn" data-i="2"><i class="fa-solid fa-chevron-right"></i></div>
+                    <div class="stage-card" data-i="3"><div class="stage-ic bg-emerald-500/20 text-emerald-400"><i class="fa-solid fa-user-check"></i></div><p class="font-black text-sm">4 · Enroll students</p><p class="text-[11px] muted mt-1">Staff enroll in bulk, or students self-enroll.</p></div>
+                    <div class="stage-conn" data-i="3"><i class="fa-solid fa-chevron-right"></i></div>
+                    <div class="stage-card" data-i="4"><div class="stage-ic bg-amber-500/20 text-amber-400"><i class="fa-solid fa-graduation-cap"></i></div><p class="font-black text-sm">5 · Learn &amp; assess</p><p class="text-[11px] muted mt-1">Modules + timed exams. Essays AI-graded, teacher-reviewed.</p></div>
+                    <div class="stage-conn" data-i="4"><i class="fa-solid fa-chevron-right"></i></div>
+                    <div class="stage-card" data-i="5"><div class="stage-ic bg-teal-500/20 text-teal-400"><i class="fa-solid fa-certificate"></i></div><p class="font-black text-sm">6 · Auto-certify</p><p class="text-[11px] muted mt-1">All modules + all exams passed → QR certificate unlocks.</p></div>
+                </div>
+                <div class="mt-6"><div class="barwrap" style="height:6px"><div class="bar" id="flowBar" style="background:linear-gradient(90deg,#6366f1,#3b82f6)"></div></div></div>
+            </div>
+        </section>
+
+        <!-- ROLES -->
+        <section class="panel" data-panel="roles">
+            <span class="chip glass text-indigo-400 w-max">BUILT FOR EVERY ROLE</span>
+            <h2 class="text-3xl font-black mt-2">Pick a role — see their real screen</h2>
+            <div class="flex gap-2 mt-4 flex-wrap">
+                <div class="rolebtn btn glass chip px-4 py-2.5 text-sm active" data-role="staff"><i class="fa-solid fa-user-tie"></i> Staff</div>
+                <div class="rolebtn btn glass chip px-4 py-2.5 text-sm" data-role="builder"><i class="fa-solid fa-pen-ruler"></i> Content Builder</div>
+                <div class="rolebtn btn glass chip px-4 py-2.5 text-sm" data-role="teacher"><i class="fa-solid fa-chalkboard-user"></i> Teacher</div>
+                <div class="rolebtn btn glass chip px-4 py-2.5 text-sm" data-role="student"><i class="fa-solid fa-user-graduate"></i> Student</div>
+            </div>
+            <div class="flex-1 grid md:grid-cols-[1fr_1.15fr] gap-6 mt-4 min-h-0 items-center">
+                <div class="flex flex-col justify-center scrollable" id="roleText"></div>
+                <div class="flex items-center justify-center" id="roleMock"></div>
+            </div>
+        </section>
+
+        <!-- ASSESS -->
+        <section class="panel" data-panel="assess">
+            <span class="chip glass text-indigo-400 w-max">ASSESSMENTS &amp; CERTIFICATES</span>
+            <h2 class="text-3xl font-black mt-2">Rigorous, automatic, verifiable</h2>
+            <div class="flex-1 grid md:grid-cols-3 gap-4 mt-4 items-center min-h-0">
+                <!-- taking exam -->
+                <div class="win"><div class="win-bar"><span class="win-dot" style="background:#f87171"></span><span class="win-dot" style="background:#fbbf24"></span><span class="win-dot" style="background:#34d399"></span><span class="text-[9px] text-slate-500 ml-1">Final Assessment</span></div>
+                    <div class="win-main">
+                        <div class="win-hd"><span class="win-pill" style="background:rgba(255,255,255,.08);color:#cbd5e1">Question 5 / 20</span><span class="win-pill" style="background:rgba(248,113,113,.15);color:#f87171"><i class="fa-solid fa-clock"></i> 42:15</span></div>
+                        <p class="text-[10px] font-bold mb-2" style="color:#e2e8f0">Safest way to pass a knife to a colleague?</p>
+                        <div class="space-y-1.5">
+                            <div class="win-card p-1.5 text-[9px]" style="color:#94a3b8">Blade first, quickly</div>
+                            <div class="p-1.5 text-[9px] rounded-lg" style="border:1.5px solid #6366f1;background:rgba(99,102,241,.15);color:#c7d2fe;font-weight:700">Handle first, set it on the counter</div>
+                            <div class="win-card p-1.5 text-[9px]" style="color:#94a3b8">Toss it gently</div>
+                        </div>
+                        <div class="flex justify-between items-center mt-2.5"><span class="win-pill" style="background:rgba(255,255,255,.06);color:#64748b">Prev</span><span class="win-btn">Next <i class="fa-solid fa-arrow-right"></i></span></div>
+                    </div></div>
+                <!-- result -->
+                <div class="win"><div class="win-bar"><span class="win-dot" style="background:#f87171"></span><span class="win-dot" style="background:#fbbf24"></span><span class="win-dot" style="background:#34d399"></span><span class="text-[9px] text-slate-500 ml-1">Result</span></div>
+                    <div class="win-main flex flex-col items-center justify-center" style="min-height:150px">
+                        <svg width="76" height="76" viewBox="0 0 120 120"><circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="11"/><circle cx="60" cy="60" r="50" fill="none" stroke="#34d399" stroke-width="11" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="47" transform="rotate(-90 60 60)"/><text x="60" y="60" text-anchor="middle" font-size="26" font-weight="900" fill="#fff">85%</text><text x="60" y="80" text-anchor="middle" font-size="11" fill="#94a3b8">score</text></svg>
+                        <span class="win-pill mt-3" style="background:rgba(52,211,153,.15);color:#34d399"><i class="fa-solid fa-circle-check"></i> PASSED · ≥ 75%</span>
+                        <p class="text-[9px] text-slate-500 mt-2">Attempt 1 of 3 · auto-graded</p>
+                    </div></div>
+                <!-- teacher grading -->
+                <div class="win"><div class="win-bar"><span class="win-dot" style="background:#f87171"></span><span class="win-dot" style="background:#fbbf24"></span><span class="win-dot" style="background:#34d399"></span><span class="text-[9px] text-slate-500 ml-1">Essay Review</span></div>
+                    <div class="win-main">
+                        <p class="text-[9px] text-slate-500 uppercase font-black mb-1">Question</p>
+                        <p class="text-[10px] mb-2" style="color:#e2e8f0">Explain safe knife handling.</p>
+                        <div class="win-card p-2 mb-1.5"><div class="flex items-center justify-between"><span class="text-[9px] text-slate-400 uppercase font-black">AI score</span><span class="win-pill" style="background:rgba(96,165,250,.15);color:#60a5fa">8 / 10</span></div><p class="text-[8.5px] text-slate-500 italic mt-1">Covers grip &amp; technique; missing storage step.</p></div>
+                        <div class="win-card p-2" style="border-color:rgba(52,211,153,.4)"><div class="flex items-center justify-between"><span class="text-[9px] text-emerald-400 uppercase font-black">Teacher override</span><span class="win-pill" style="background:rgba(52,211,153,.15);color:#34d399">9 / 10</span></div><div class="win-btn w-full justify-center mt-1.5"><i class="fa-solid fa-check"></i> Save override</div></div>
+                    </div></div>
+            </div>
+            <div class="grid grid-cols-3 gap-4 mt-3 text-center text-[11px] faint">
+                <p><b class="text-[color:var(--text)]">20 items</b> · default per attempt</p>
+                <p><b class="text-[color:var(--text)]">75%</b> to pass · <b class="text-[color:var(--text)]">3</b> attempts · timer optional</p>
+                <p>MCQ instant · essays AI-graded, <b class="text-[color:var(--text)]">teacher override wins</b></p>
+            </div>
+        </section>
+
+        <!-- WHY US (v5 TCO logic) -->
+        <section class="panel" data-panel="why">
+            <span class="chip glass text-indigo-400 w-max">THE HONEST COMPARISON</span>
+            <h2 class="text-3xl font-black mt-2">The real cost isn't the platform — <span class="grad-text">it's the content.</span></h2>
+            <p class="muted text-sm mt-2 max-w-3xl">A platform is the cheap part. Schools also pay to <b>build</b> the courses, <b>maintain</b> them, and <b>grade</b> the work — every term. Toggle those real costs and watch what a "cheaper" LMS actually costs.</p>
+            <div class="flex items-center gap-3 mt-4">
+                <span class="text-sm muted">Platform only</span>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="tcoToggle" class="sr-only peer" onchange="drawTco()">
+                    <div class="w-12 h-6 rounded-full transition-all peer-checked:bg-indigo-500 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:h-5 after:w-5 after:rounded-full after:transition-all peer-checked:after:translate-x-6" style="background:var(--track)"></div>
+                </label>
+                <span class="text-sm font-bold">+ Build · maintain · grade</span>
+            </div>
+            <div class="flex-1 grid md:grid-cols-[1.4fr_1fr] gap-6 items-center mt-2 min-h-0">
+                <div class="flex flex-col justify-center gap-3" id="tcoBars"></div>
+                <div class="glass rounded-2xl p-5">
+                    <p class="text-[11px] font-black uppercase tracking-widest faint mb-3">What "included" replaces</p>
+                    <div class="space-y-2.5 text-sm">
+                        <div class="flex items-center gap-2.5"><span class="icon-box h-8 w-8 bg-rose-500/15 text-rose-400"><i class="fa-solid fa-user-pen text-xs"></i></span> <div><b>Content build</b><p class="text-[11px] faint">≈ 60 dev-hours / course, by hand</p></div></div>
+                        <div class="flex items-center gap-2.5"><span class="icon-box h-8 w-8 bg-rose-500/15 text-rose-400"><i class="fa-solid fa-arrows-rotate text-xs"></i></span> <div><b>Yearly updates</b><p class="text-[11px] faint">re-paid dev hours every revision</p></div></div>
+                        <div class="flex items-center gap-2.5"><span class="icon-box h-8 w-8 bg-rose-500/15 text-rose-400"><i class="fa-solid fa-clock text-xs"></i></span> <div><b>Grading labor</b><p class="text-[11px] faint">~4 min/essay × thousands/term</p></div></div>
+                    </div>
+                    <div class="rounded-xl bg-indigo-500/12 border border-indigo-400/25 p-3 mt-3 text-[12px]">Honest take: we're <b>not the cheapest platform</b>. But with build, updates &amp; grading included, the <b class="grad-text">all-in cost</b> is lower — and you launch in minutes, not months.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TRUST -->
+        <section class="panel" data-panel="trust">
+            <span class="chip glass text-indigo-400 w-max">SECURITY &amp; TRUST</span>
+            <h2 class="text-3xl font-black mt-2">Built to protect your institution</h2>
+            <div class="flex-1 grid md:grid-cols-[300px_1fr] gap-6 items-center mt-3 min-h-0">
+                <!-- animated shield -->
+                <div class="flex items-center justify-center relative" style="min-height:180px">
+                    <svg class="orbit" width="220" height="220" viewBox="0 0 220 220" style="position:absolute"><circle cx="110" cy="110" r="96" fill="none" stroke="var(--track)" stroke-dasharray="4 10" stroke-width="2"/></svg>
+                    <svg class="orbit2" width="180" height="180" viewBox="0 0 180 180" style="position:absolute"><circle cx="90" cy="90" r="74" fill="none" stroke="var(--track)" stroke-dasharray="2 12" stroke-width="2"/></svg>
+                    <span class="ping-ring" style="position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(52,211,153,.15)"></span>
+                    <div class="shield-glow relative" style="height:110px;width:110px;border-radius:32px;background:linear-gradient(135deg,#059669,#10b981);display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-shield-halved text-white" style="font-size:46px"></i></div>
+                    <!-- orbiting badges -->
+                    <span class="orbit" style="position:absolute;width:220px;height:220px;display:block"><span style="position:absolute;top:-2px;left:50%;transform:translateX(-50%);height:30px;width:30px;border-radius:10px;background:var(--glass);border:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:center;color:#60a5fa"><i class="fa-solid fa-lock text-xs"></i></span></span>
+                    <span class="orbit2" style="position:absolute;width:180px;height:180px;display:block"><span style="position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);height:28px;width:28px;border-radius:9px;background:var(--glass);border:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:center;color:#a78bfa"><i class="fa-solid fa-key text-[10px]"></i></span></span>
+                </div>
+                <div class="grid sm:grid-cols-2 gap-3">
+                    <div class="glass rounded-2xl p-4 lift"><div class="icon-box bg-blue-500/20 text-blue-400 mb-2"><i class="fa-solid fa-user-lock"></i></div><p class="font-black text-sm">Institution isolation</p><p class="text-xs muted mt-1">Staff &amp; teachers only ever see their own institution's data.</p></div>
+                    <div class="glass rounded-2xl p-4 lift"><div class="icon-box bg-emerald-500/20 text-emerald-400 mb-2"><i class="fa-solid fa-fingerprint"></i></div><p class="font-black text-sm">bcrypt passwords</p><p class="text-xs muted mt-1">Hashed, never plain text. Disabled accounts can't log in.</p></div>
+                    <div class="glass rounded-2xl p-4 lift"><div class="icon-box bg-violet-500/20 text-violet-400 mb-2"><i class="fa-solid fa-clock-rotate-left"></i></div><p class="font-black text-sm">Secure sessions</p><p class="text-xs muted mt-1">Browser-only token, 24h expiry; login is rate-limited.</p></div>
+                    <div class="glass rounded-2xl p-4 lift"><div class="icon-box bg-amber-500/20 text-amber-400 mb-2"><i class="fa-solid fa-shield-virus"></i></div><p class="font-black text-sm">Safe content</p><p class="text-xs muted mt-1">Lesson content sanitized before saving — blocks malicious code.</p></div>
+                    <div class="glass rounded-2xl p-4 lift"><div class="icon-box bg-rose-500/20 text-rose-400 mb-2"><i class="fa-solid fa-list-check"></i></div><p class="font-black text-sm">Audit &amp; API logs</p><p class="text-xs muted mt-1">Sensitive changes &amp; every API request are logged.</p></div>
+                    <div class="glass rounded-2xl p-4 lift"><div class="icon-box bg-teal-500/20 text-teal-400 mb-2"><i class="fa-solid fa-hashtag"></i></div><p class="font-black text-sm">Scoped API keys</p><p class="text-xs muted mt-1">Hashed, scoped, limited to your institution's data.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRICING (credits) -->
+        <section class="panel" data-panel="pricing">
+            <span class="chip glass text-indigo-400 w-max">HOW PRICING WORKS</span>
+            <h2 class="text-3xl font-black mt-2">One subscription + AI credits</h2>
+            <p class="muted text-sm mt-1 max-w-3xl">Your plan includes hosting, all features, and a monthly pool of <b>AI credits</b>. Each AI action spends credits from one of four pools. Tap a pool to see what it does and what each action costs.</p>
+            <div class="flex-1 grid md:grid-cols-[280px_1fr] gap-5 mt-4 min-h-0">
+                <div class="flex flex-col gap-2.5">
+                    <div class="pool lift glass rounded-xl p-3 flex items-center gap-3" data-pool="content"><div class="icon-box bg-teal-500/20 text-teal-400"><i class="fa-solid fa-file-lines"></i></div><div><p class="font-black text-sm">Course Content</p><p class="text-[10px] faint">lessons · exams · thumbnails</p></div></div>
+                    <div class="pool lift glass rounded-xl p-3 flex items-center gap-3" data-pool="slide"><div class="icon-box bg-fuchsia-500/20 text-fuchsia-400"><i class="fa-solid fa-images"></i></div><div><p class="font-black text-sm">Slide Decks</p><p class="text-[10px] faint">design + AI images</p></div></div>
+                    <div class="pool lift glass rounded-xl p-3 flex items-center gap-3" data-pool="cscbc"><div class="icon-box bg-indigo-500/20 text-indigo-400"><i class="fa-solid fa-file-contract"></i></div><div><p class="font-black text-sm">CS &amp; CBC</p><p class="text-[10px] faint">TESDA documents</p></div></div>
+                    <div class="pool lift glass rounded-xl p-3 flex items-center gap-3" data-pool="grading"><div class="icon-box bg-amber-500/20 text-amber-400"><i class="fa-solid fa-pen-ruler"></i></div><div><p class="font-black text-sm">Essay Grading</p><p class="text-[10px] faint">1 credit = 1 answer</p></div></div>
+                    <div class="glass rounded-xl p-3 mt-1 text-[11px] muted"><i class="fa-solid fa-circle-info text-indigo-400 mr-1"></i> Credits refill monthly &amp; stack across plans. Run low? Top up any time — no feature is ever locked.</div>
+                </div>
+                <div class="glass rounded-2xl p-5 flex flex-col min-h-0"><div id="poolBody" class="fade-in flex-1"></div></div>
+            </div>
+            <p class="text-[11px] faint mt-2">Credit amounts reflect real generation cost. Final peso pricing is prepared per institution — <a href="#" onclick="go('demo');return false" class="text-indigo-400 font-bold">request a quote</a>.</p>
+        </section>
+
+        <!-- DEMO -->
+        <section class="panel" data-panel="demo">
+            <div class="flex-1 flex flex-col justify-center max-w-3xl">
+                <span class="chip glass text-emerald-400 w-max"><i class="fa-solid fa-calendar-check"></i> LET'S TALK</span>
+                <h2 class="text-4xl md:text-5xl font-black mt-4 leading-tight">Ready to launch<br>your programs <span class="grad-text">this term?</span></h2>
+                <p class="muted text-lg mt-4 max-w-xl">We'll build a sample course live and generate a TESDA document with your qualifications — then send an all-in quote.</p>
+                <div class="grid sm:grid-cols-3 gap-3 mt-7">
+                    <div class="glass rounded-xl p-4 lift"><i class="fa-solid fa-desktop text-indigo-400 mb-2"></i><p class="font-bold text-sm">Live demo</p></div>
+                    <div class="glass rounded-xl p-4 lift"><i class="fa-solid fa-file-invoice-dollar text-indigo-400 mb-2"></i><p class="font-bold text-sm">Tailored quote</p></div>
+                    <div class="glass rounded-xl p-4 lift"><i class="fa-solid fa-rocket text-indigo-400 mb-2"></i><p class="font-bold text-sm">Fast onboarding</p></div>
+                </div>
+                <div class="flex flex-wrap gap-x-8 gap-y-2 mt-8 text-sm">
+                    <a href="mailto:sales@your-company.com" class="flex items-center gap-2 muted hover:text-[color:var(--text)]"><i class="fa-solid fa-envelope text-indigo-400"></i> [sales@your-company.com]</a>
+                    <a href="tel:+639000000000" class="flex items-center gap-2 muted hover:text-[color:var(--text)]"><i class="fa-solid fa-phone text-indigo-400"></i> [+63 900 000 0000]</a>
+                    <a href="#" class="flex items-center gap-2 muted hover:text-[color:var(--text)]"><i class="fa-solid fa-globe text-indigo-400"></i> [www.your-company.com]</a>
+                </div>
+            </div>
+            <div class="flex items-center gap-3"><div class="h-9 w-9 rounded-xl glass flex items-center justify-center"><i class="fa-solid fa-graduation-cap"></i></div><div><p class="text-sm font-black leading-none">AI Genesis</p><p class="text-[10px] faint mt-1">Build. Teach. Assess. Certify.</p></div></div>
+        </section>
+
+        <div class="absolute bottom-4 right-6 flex items-center gap-3 z-20">
+            <div class="btn glass h-9 px-3 rounded-full flex items-center gap-2 text-xs font-bold" onclick="toggleTheme()" id="themeBtn"><i class="fa-solid fa-moon"></i> <span id="themeLbl">Dark</span></div>
+            <div class="btn glass h-9 w-9 rounded-full flex items-center justify-center" onclick="nav(-1)"><i class="fa-solid fa-chevron-left text-xs"></i></div>
+            <div class="flex items-center gap-1.5" id="dots"></div>
+            <div class="btn glass h-9 w-9 rounded-full flex items-center justify-center" onclick="nav(1)"><i class="fa-solid fa-chevron-right text-xs"></i></div>
+        </div>
+    </div>
+</div>
+
+<script>
+const ORDER=['home','build','platform','flow','roles','assess','why','trust','pricing','demo'];
+let cur='home';
+const dotsEl=document.getElementById('dots');
+ORDER.forEach(id=>{const d=document.createElement('div');d.className='dot';d.dataset.go=id;d.onclick=()=>go(id);dotsEl.appendChild(d);});
+function syncDots(){[...dotsEl.children].forEach(d=>d.classList.toggle('active',d.dataset.go===cur));}
+function go(id){
+    if(id===cur)return;
+    const from=document.querySelector(`.panel[data-panel="${cur}"]`),to=document.querySelector(`.panel[data-panel="${id}"]`);
+    from.classList.add('leaving');from.classList.remove('active');setTimeout(()=>from.classList.remove('leaving'),500);
+    to.classList.add('active');
+    document.querySelectorAll('.rail-item').forEach(r=>r.classList.toggle('active',r.dataset.go===id));
+    cur=id;syncDots();onEnter(id);
+}
+function nav(d){let i=ORDER.indexOf(cur)+d;if(i<0)i=ORDER.length-1;if(i>=ORDER.length)i=0;go(ORDER[i]);}
+document.querySelectorAll('.rail-item').forEach(r=>r.onclick=()=>go(r.dataset.go));
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')nav(1);if(e.key==='ArrowLeft')nav(-1);});
+syncDots();
+function onEnter(id){if(id==='home')runCounters();if(id==='why')drawTco();if(id==='build')resetBuild();if(id==='flow')runFlow();}
+
+/* theme */
+function toggleTheme(){const h=document.documentElement,dark=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',dark?'light':'dark');document.getElementById('themeLbl').textContent=dark?'Light':'Dark';document.querySelector('#themeBtn i').className=dark?'fa-solid fa-sun':'fa-solid fa-moon';try{localStorage.setItem('ulms_theme',dark?'light':'dark');}catch(e){}}
+(function(){try{const t=localStorage.getItem('ulms_theme');if(t==='light'){document.documentElement.setAttribute('data-theme','light');document.getElementById('themeLbl').textContent='Light';document.querySelector('#themeBtn i').className='fa-solid fa-sun';}}catch(e){}})();
+
+/* counters */
+function runCounters(){document.querySelectorAll('.panel[data-panel="home"] .ctr').forEach(el=>{const t=parseFloat(el.dataset.t),s=el.dataset.s||'';let c=0;const st=Math.max(1,t/40);clearInterval(el._i);el._i=setInterval(()=>{c+=st;if(c>=t){c=t;clearInterval(el._i);}el.textContent=Math.round(c)+s;},24);});}
+runCounters();
+
+/* build */
+let building=false;
+function resetBuild(){document.querySelectorAll('#buildLog .logline').forEach(l=>l.classList.remove('on'));document.querySelectorAll('#buildTiles .tile').forEach(t=>{t.style.opacity='.3';t.style.borderColor='';t.style.color='';});setRing(0);}
+function setRing(p){document.getElementById('buildRing').style.strokeDashoffset=327-(327*p/100);document.getElementById('buildPct').textContent=Math.round(p)+'%';}
+function runBuild(){if(building)return;building=true;resetBuild();const logs=document.querySelectorAll('#buildLog .logline'),tiles=document.querySelectorAll('#buildTiles .tile'),btn=document.getElementById('buildBtn');btn.innerHTML='<i class="fa-solid fa-circle-notch fa-spin"></i> Building…';let s=0;const n=logs.length;const iv=setInterval(()=>{if(s<n)logs[s].classList.add('on');if(s<tiles.length){tiles[s].style.opacity='1';tiles[s].style.borderColor='#34d399';tiles[s].style.color='var(--text)';}setRing(Math.min(100,((s+1)/n)*100));s++;if(s>=n){clearInterval(iv);building=false;btn.innerHTML='<i class="fa-solid fa-rotate-right"></i> Run again';}},700);}
+
+/* journey animation */
+let flowing=false;
+function runFlow(){
+    if(flowing)return;flowing=true;
+    const cards=document.querySelectorAll('#pipe .stage-card'),conns=document.querySelectorAll('#pipe .stage-conn'),bar=document.getElementById('flowBar');
+    cards.forEach(c=>c.classList.remove('on','pulse'));conns.forEach(c=>c.classList.remove('on'));bar.style.width='0';
+    let i=0;const n=cards.length;
+    const iv=setInterval(()=>{
+        if(i>0&&conns[i-1])conns[i-1].classList.add('on');
+        cards[i].classList.add('on');cards.forEach(c=>c.classList.remove('pulse'));cards[i].classList.add('pulse');
+        bar.style.width=((i+1)/n*100)+'%';
+        i++;if(i>=n){clearInterval(iv);flowing=false;setTimeout(()=>cards.forEach(c=>c.classList.remove('pulse')),1600);}
+    },550);
+}
+
+/* PLATFORM features — text + mini mockup */
+const FEAT={
+ content:{i:'fa-wand-magic-sparkles',c:'violet',t:'AI content generation',d:'Generate module lists, 2-pass lessons, exam banks &amp; essay items — reviewed before publish.',
+  mock:`<div class="win"><div class="win-bar"><span class="win-dot" style="background:#f87171"></span><span class="win-dot" style="background:#fbbf24"></span><span class="win-dot" style="background:#34d399"></span><span class="text-[9px] text-slate-500 ml-1">AI · Lesson content</span></div><div class="win-main"><div class="win-hd"><span class="win-pill" style="background:rgba(20,184,166,.15);color:#5eead4"><i class="fa-solid fa-coins"></i> 10 credits</span><span class="win-pill" style="background:rgba(255,255,255,.06);color:#94a3b8">Pass 2 of 2</span></div><div class="space-y-1"><div style="height:6px;border-radius:6px;background:rgba(255,255,255,.12);width:100%"></div><div style="height:6px;border-radius:6px;background:rgba(255,255,255,.12);width:92%"></div><div style="height:6px;border-radius:6px;background:rgba(255,255,255,.12);width:80%"></div><div style="height:6px;border-radius:6px;background:rgba(255,255,255,.12);width:88%"></div></div><div class="win-btn mt-2"><i class="fa-solid fa-wand-magic-sparkles"></i> Generate</div></div></div>`},
+ slides:{i:'fa-images',c:'fuchsia',t:'AI slide decks',d:'Designed slides + AI background images per section, rendered to a PDF you can tweak.',
+  mock:`<div class="win"><div class="win-bar"><span class="win-dot" style="background:#f87171"></span><span class="win-dot" style="background:#fbbf24"></span><span class="win-dot" style="background:#34d399"></span><span class="text-[9px] text-slate-500 ml-1">Slides · rendering</span></div><div class="win-main"><div class="grid grid-cols-3 gap-1.5"><div class="aspect-video rounded" style="background:linear-gradient(135deg,#334155,#0f172a);display:flex;align-items:center;justify-content:center;color:#fff;font-size:8px;font-weight:800">Title</div><div class="aspect-video rounded" style="background:linear-gradient(135deg,#4f46e5,#3b82f6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:8px;font-weight:800">Content</div><div class="aspect-video rounded" style="background:linear-gradient(135deg,#059669,#14b8a6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:8px;font-weight:800">Summary</div></div><div class="flex items-center justify-between mt-2"><span class="win-pill" style="background:rgba(217,70,239,.15);color:#e879f9"><i class="fa-solid fa-coins"></i> 11 + 4/img</span><span class="win-pill" style="background:rgba(255,255,255,.06);color:#94a3b8">→ PDF</span></div></div></div>`},
+ cscbc:{i:'fa-file-contract',c:'indigo',t:'TESDA CS &amp; CBC',d:'Formatted Competency Standards &amp; Curriculum (.docx) — basic, common &amp; core units, AI-assisted.',
+  mock:`<div class="win"><div class="win-bar"><span class="win-dot" style="background:#f87171"></span><span class="win-dot" style="background:#fbbf24"></span><span class="win-dot" style="background:#34d399"></span><span class="text-[9px] text-slate-500 ml-1">CS Generator</span></div><div class="win-main"><div class="flex gap-1 mb-2"><span class="win-pill" style="background:rgba(99,102,241,.25);color:#c7d2fe">Basic</span><span class="win-pill" style="background:rgba(255,255,255,.06);color:#94a3b8">Common</span><span class="win-pill" style="background:rgba(255,255,255,.06);color:#94a3b8">Core</span></div><div class="space-y-1"><div class="win-card p-1.5 text-[9px]" style="color:#cbd5e1">Elements → criteria → evidence</div><div class="win-card p-1.5 text-[9px]" style="color:#cbd5e1">Range of variables</div></div><div class="win-btn mt-2"><i class="fa-solid fa-file-word"></i> Download .docx</div></div></div>`},
+ grade:{i:'fa-pen-ruler',c:'amber',t:'AI auto-grading',d:'MCQ scores instantly; essays, activities &amp; code graded by AI — teachers can override.',
+  mock:`<div class="win"><div class="win-bar"><span class="win-dot" style="background:#f87171"></span><span class="win-dot" style="background:#fbbf24"></span><span class="win-dot" style="background:#34d399"></span><span class="text-[9px] text-slate-500 ml-1">Essay grading</span></div><div class="win-main"><div class="win-card p-2 mb-1.5"><div class="flex justify-between"><span class="text-[9px] text-slate-400 uppercase font-black">AI</span><span class="win-pill" style="background:rgba(96,165,250,.15);color:#60a5fa">8 / 10</span></div></div><div class="win-card p-2" style="border-color:rgba(52,211,153,.4)"><div class="flex justify-between"><span class="text-[9px] text-emerald-400 uppercase font-black">Teacher</span><span class="win-pill" style="background:rgba(52,211,153,.15);color:#34d399">9 / 10</span></div></div><p class="text-[8px] text-slate-500 mt-1.5">1 credit = 1 answer · override wins</p></div></div>`},
+ assess:{i:'fa-clipboard-check',c:'emerald',t:'Assessments &amp; progress',d:'Timed exams — default 20 items, 75% to pass, 3 attempts. Items pulled from assigned modules.',
+  mock:`<div class="win"><div class="win-bar"><span class="win-dot" style="background:#f87171"></span><span class="win-dot" style="background:#fbbf24"></span><span class="win-dot" style="background:#34d399"></span><span class="text-[9px] text-slate-500 ml-1">Assessment</span></div><div class="win-main"><div class="win-hd"><span class="win-pill" style="background:rgba(255,255,255,.08);color:#cbd5e1">Q 5 / 20</span><span class="win-pill" style="background:rgba(248,113,113,.15);color:#f87171"><i class="fa-solid fa-clock"></i> 42:15</span></div><div class="space-y-1"><div class="win-card p-1.5 text-[9px]" style="color:#94a3b8">Option A</div><div class="p-1.5 text-[9px] rounded-lg" style="border:1.5px solid #6366f1;background:rgba(99,102,241,.15);color:#c7d2fe">Option B ✓</div></div></div></div>`},
+ cert:{i:'fa-certificate',c:'teal',t:'Verifiable certificates',d:'Auto-issued on completion (all modules + all exams passed) with a QR anyone can verify.',
+  mock:`<div class="win"><div class="win-bar"><span class="win-dot" style="background:#f87171"></span><span class="win-dot" style="background:#fbbf24"></span><span class="win-dot" style="background:#34d399"></span><span class="text-[9px] text-slate-500 ml-1">Certificate</span></div><div class="win-main text-center" style="padding-top:6px"><i class="fa-solid fa-certificate text-teal-400" style="font-size:20px"></i><p class="text-[8px] text-slate-500 uppercase tracking-widest mt-1">Certificate of Completion</p><p class="text-[11px] font-black">Juan Dela Cruz</p><p class="text-[8px] text-slate-500">Cookery NC II</p><div style="height:26px;width:26px;background:#fff;border-radius:5px;margin:6px auto 0;display:flex;align-items:center;justify-content:center;color:#0f172a"><i class="fa-solid fa-qrcode text-xs"></i></div></div></div>`},
+ track:{i:'fa-chart-line',c:'sky',t:'Progress tracker',d:'Per-student module &amp; assessment progress with automatic at-risk detection.',
+  mock:`<div class="win"><div class="win-bar"><span class="win-dot" style="background:#f87171"></span><span class="win-dot" style="background:#fbbf24"></span><span class="win-dot" style="background:#34d399"></span><span class="text-[9px] text-slate-500 ml-1">Student Tracker</span></div><div class="win-main space-y-1.5"><div class="win-card p-1.5 flex justify-between text-[9px]"><span>Maria S.</span><span class="win-pill" style="background:rgba(52,211,153,.15);color:#34d399">On-track</span></div><div class="win-card p-1.5 flex justify-between text-[9px]"><span>Pedro R.</span><span class="win-pill" style="background:rgba(251,191,36,.15);color:#fbbf24">At-risk</span></div><div class="win-card p-1.5 flex justify-between text-[9px]"><span>Ana C.</span><span class="win-pill" style="background:rgba(248,113,113,.15);color:#f87171">Inactive</span></div></div></div>`},
+ multi:{i:'fa-building-columns',c:'blue',t:'Multi-institution',d:'Isolated data; run courses as sections/batches with their own dates, caps &amp; teachers.',
+  mock:`<div class="win"><div class="win-bar"><span class="win-dot" style="background:#f87171"></span><span class="win-dot" style="background:#fbbf24"></span><span class="win-dot" style="background:#34d399"></span><span class="text-[9px] text-slate-500 ml-1">Course Instances</span></div><div class="win-main space-y-1.5"><div class="win-card p-1.5 flex justify-between text-[9px]"><span>Cookery · SEC-A</span><span class="win-pill" style="background:rgba(52,211,153,.15);color:#34d399">Open</span></div><div class="win-card p-1.5 flex justify-between text-[9px]"><span>Bread · BATCH-3</span><span class="win-pill" style="background:rgba(52,211,153,.15);color:#34d399">Open</span></div><div class="win-card p-1.5 flex justify-between text-[9px]"><span>Bookkeeping · SEC-B</span><span class="win-pill" style="background:rgba(255,255,255,.08);color:#94a3b8">Closed</span></div></div></div>`},
+ api:{i:'fa-plug',c:'slate',t:'SIS integration API',d:'Scoped, secure API syncs accounts, enrollments, grades &amp; certificates with your SIS.',
+  mock:`<div class="win"><div class="win-bar"><span class="win-dot" style="background:#f87171"></span><span class="win-dot" style="background:#fbbf24"></span><span class="win-dot" style="background:#34d399"></span><span class="text-[9px] text-slate-500 ml-1">Developer · API</span></div><div class="win-main"><div class="win-card p-2" style="font-family:monospace"><p class="text-[8px]" style="color:#34d399">GET /api/v1/external/grades</p><p class="text-[8px] text-slate-500 mt-1">X-API-Key: tldsk_••••</p></div><div class="flex gap-1 mt-2"><span class="win-pill" style="background:rgba(255,255,255,.06);color:#94a3b8">accounts</span><span class="win-pill" style="background:rgba(255,255,255,.06);color:#94a3b8">grades</span><span class="win-pill" style="background:rgba(52,211,153,.15);color:#34d399">200 OK</span></div></div></div>`},
+ cloud:{i:'fa-cloud',c:'cyan',t:'Cloud &amp; secure',d:'Auto-scaling servers sized to your student count; encrypted passwords &amp; audit logging.',
+  mock:`<div class="win"><div class="win-bar"><span class="win-dot" style="background:#f87171"></span><span class="win-dot" style="background:#fbbf24"></span><span class="win-dot" style="background:#34d399"></span><span class="text-[9px] text-slate-500 ml-1">Infrastructure</span></div><div class="win-main space-y-1.5"><div class="win-card p-1.5 flex items-center gap-2 text-[9px]"><i class="fa-solid fa-server text-cyan-400"></i> Web server <span class="win-pill ml-auto" style="background:rgba(52,211,153,.15);color:#34d399">auto-scaled</span></div><div class="win-card p-1.5 flex items-center gap-2 text-[9px]"><i class="fa-solid fa-database text-blue-400"></i> Dedicated DB <span class="win-pill ml-auto" style="background:rgba(52,211,153,.15);color:#34d399">isolated</span></div><div class="win-card p-1.5 flex items-center gap-2 text-[9px]"><i class="fa-solid fa-lock text-emerald-400"></i> bcrypt + audit logs</div></div></div>`},
+};
+function showFeat(k){
+    const f=FEAT[k];
+    document.getElementById('featBody').outerHTML=`<div id="featBody" class="fade-in"><div class="icon-box bg-${f.c}-500/20 text-${f.c}-400 mb-3"><i class="fa-solid ${f.i} text-lg"></i></div><h3 class="text-2xl font-black">${f.t}</h3><p class="muted text-sm mt-2 leading-relaxed">${f.d}</p></div>`;
+    document.getElementById('featMock').outerHTML=`<div id="featMock" class="fade-in">${f.mock}</div>`;
+    document.querySelectorAll('.feat').forEach(el=>el.style.borderColor=el.dataset.feat===k?'#818cf8':'');
+}
+document.querySelectorAll('.feat').forEach(el=>el.onclick=()=>showFeat(el.dataset.feat));
+showFeat('content');
+
+/* ROLES (accurate app windows) */
+const ROLES={
+ staff:{t:'Staff',s:'Run the institution day-to-day.',pts:['Create &amp; manage all accounts and course sections','Enroll students &amp; assign teachers in bulk','Monitor dashboards, certificates &amp; subscription','Manage API keys · use CS/CBC generators'],
+  mock:`<div class="win"><div class="win-bar"><span class="win-dot" style="background:#f87171"></span><span class="win-dot" style="background:#fbbf24"></span><span class="win-dot" style="background:#34d399"></span><span class="text-[9px] text-slate-500 ml-1">Staff Console</span></div><div class="win-body" style="height:184px"><div class="win-side"><div class="win-ic on"><i class="fa-solid fa-gauge-high"></i></div><div class="win-ic"><i class="fa-solid fa-users-gear"></i></div><div class="win-ic"><i class="fa-solid fa-layer-group"></i></div><div class="win-ic"><i class="fa-solid fa-user-check"></i></div><div class="win-ic"><i class="fa-solid fa-key"></i></div><div class="win-ic"><i class="fa-solid fa-file-lines"></i></div></div><div class="win-main"><div class="win-hd"><div><p class="text-[11px] font-black">Institution Overview</p><p class="text-[8px] text-slate-500">TVI Manila Training Center</p></div><span class="win-pill" style="background:rgba(52,211,153,.15);color:#34d399"><span class="win-dot" style="width:5px;height:5px;background:#34d399"></span>Active plan</span></div><div class="grid grid-cols-4 gap-1.5 mb-2">${['Students|428','Teachers|22','Enroll.|1,204','Certs|96'].map(x=>{const[a,b]=x.split('|');return `<div class="win-card text-center py-1.5"><p class="text-[7px] text-slate-500 uppercase">${a}</p><p class="text-[13px] font-black">${b}</p></div>`}).join('')}</div><div class="grid grid-cols-2 gap-1.5"><div class="win-card p-2"><p class="text-[8px] font-black text-slate-400 mb-1">Subscription — students</p><div class="win-bar-track"><div style="width:57%;height:100%;border-radius:6px;background:linear-gradient(90deg,#60a5fa,#3b82f6)"></div></div><p class="text-[7px] text-slate-500 mt-1">428 / 750</p></div><div class="win-card p-2"><p class="text-[8px] font-black text-slate-400 mb-1">Progress</p><div class="flex gap-1"><span class="win-pill" style="background:rgba(52,211,153,.15);color:#34d399">On-track 310</span><span class="win-pill" style="background:rgba(251,191,36,.15);color:#fbbf24">At-risk 84</span></div></div></div></div></div></div>`},
+ builder:{t:'Content Builder <span class="text-violet-400 text-base">(Developer)</span>',s:'Creates &amp; uploads the courses.',pts:['Build courses, modules, lessons, exams &amp; slides','Generate content with AI in two review passes','Create exam banks &amp; assessments','Blank qualification → full course, fast'],
+  mock:`<div class="win"><div class="win-bar"><span class="win-dot" style="background:#f87171"></span><span class="win-dot" style="background:#fbbf24"></span><span class="win-dot" style="background:#34d399"></span><span class="text-[9px] text-slate-500 ml-1">Courses · Cookery NC II</span></div><div class="win-body" style="height:184px"><div class="win-side"><div class="win-ic on"><i class="fa-solid fa-book-open"></i></div><div class="win-ic"><i class="fa-solid fa-user"></i></div></div><div class="win-main"><div class="win-hd"><p class="text-[11px] font-black">Modules</p><span class="win-btn"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Generate</span></div><div class="space-y-1.5"><div class="win-card p-2 flex items-center gap-2 text-[10px]"><i class="fa-solid fa-folder text-blue-400"></i> Module 1 · Kitchen Safety <span class="win-pill ml-auto" style="background:rgba(52,211,153,.15);color:#34d399">published</span></div><div class="win-card p-2 flex items-center gap-2 text-[10px]"><i class="fa-solid fa-folder text-blue-400"></i> Module 2 · Knife Skills <span class="win-pill ml-auto" style="background:rgba(251,191,36,.15);color:#fbbf24">draft</span></div><div class="win-card p-2 flex items-center gap-2 text-[10px]"><i class="fa-solid fa-file-lines text-emerald-400"></i> Lesson · Hazards <span class="win-pill ml-auto" style="background:rgba(129,140,248,.18);color:#a5b4fc"><i class="fa-solid fa-coins"></i> 10 cr</span></div><div class="win-card p-2 flex items-center gap-2 text-[10px]"><i class="fa-solid fa-images text-fuchsia-400"></i> Slides · Module 1 <span class="win-pill ml-auto" style="background:rgba(129,140,248,.18);color:#a5b4fc"><i class="fa-solid fa-coins"></i> ~140 cr</span></div></div></div></div></div>`},
+ teacher:{t:'Teacher',s:'Guides &amp; assesses learners.',pts:['See only the courses/sections assigned to you','Monitor progress &amp; spot at-risk learners','Review &amp; override AI-graded essays — your mark wins'],
+  mock:`<div class="win"><div class="win-bar"><span class="win-dot" style="background:#f87171"></span><span class="win-dot" style="background:#fbbf24"></span><span class="win-dot" style="background:#34d399"></span><span class="text-[9px] text-slate-500 ml-1">Student Tracker · SEC-A</span></div><div class="win-body" style="height:184px"><div class="win-side"><div class="win-ic"><i class="fa-solid fa-chalkboard"></i></div><div class="win-ic on"><i class="fa-solid fa-chart-line"></i></div><div class="win-ic"><i class="fa-solid fa-user"></i></div></div><div class="win-main"><div class="win-hd"><p class="text-[11px] font-black">Students · 38</p><span class="win-pill" style="background:rgba(129,140,248,.18);color:#a5b4fc">Essay queue · 4</span></div><div class="space-y-1.5"><div class="win-card p-2 flex justify-between text-[10px]"><span>Maria Santos</span><span class="win-pill" style="background:rgba(52,211,153,.15);color:#34d399">On-track 88%</span></div><div class="win-card p-2 flex justify-between text-[10px]"><span>Pedro Reyes</span><span class="win-pill" style="background:rgba(251,191,36,.15);color:#fbbf24">At-risk 12%</span></div><div class="win-card p-2 flex justify-between text-[10px]"><span>Ana Cruz</span><span class="win-pill" style="background:rgba(248,113,113,.15);color:#f87171">Inactive</span></div><div class="win-card p-2 flex justify-between text-[10px]"><span><i class="fa-solid fa-pen-ruler text-amber-400"></i> Essay · Q3</span><span class="win-pill" style="background:rgba(96,165,250,.15);color:#60a5fa">AI 8 → 9/10</span></div></div></div></div></div>`},
+ student:{t:'Student',s:'Learns &amp; earns certificates.',pts:['Browse the catalog &amp; self-enroll','Lessons, videos, files &amp; timed exams','Download a verifiable certificate on completion'],
+  mock:`<div class="win"><div class="win-bar"><span class="win-dot" style="background:#f87171"></span><span class="win-dot" style="background:#fbbf24"></span><span class="win-dot" style="background:#34d399"></span><span class="text-[9px] text-slate-500 ml-1">My Learning · Cookery NC II</span></div><div class="win-body" style="height:184px"><div class="win-side"><div class="win-ic on"><i class="fa-solid fa-house-chimney-user"></i></div><div class="win-ic"><i class="fa-solid fa-compass"></i></div><div class="win-ic"><i class="fa-solid fa-user"></i></div></div><div class="win-main flex items-center gap-3"><svg width="76" height="76" viewBox="0 0 120 120"><circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="11"/><circle cx="60" cy="60" r="50" fill="none" stroke="#60a5fa" stroke-width="11" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="78" transform="rotate(-90 60 60)"/><text x="60" y="68" text-anchor="middle" font-size="24" font-weight="900" fill="#fff">75%</text></svg><div class="flex-1"><p class="text-[11px] font-black">Cookery NC II</p><p class="text-[8px] text-slate-500 mb-1.5">3 of 4 modules complete</p><div class="space-y-1"><div class="flex items-center gap-1.5 text-[9px]"><i class="fa-solid fa-circle-check text-emerald-400"></i> Kitchen Safety</div><div class="flex items-center gap-1.5 text-[9px]"><i class="fa-solid fa-circle-check text-emerald-400"></i> Knife Skills</div><div class="flex items-center gap-1.5 text-[9px] text-slate-500"><i class="fa-regular fa-circle"></i> Final Assessment</div></div><span class="win-pill mt-2" style="background:rgba(251,191,36,.15);color:#fbbf24"><i class="fa-solid fa-certificate"></i> Pass exams to unlock cert</span></div></div></div></div>`},
+};
+function showRole(k){
+    const r=ROLES[k],tx=document.getElementById('roleText');
+    tx.innerHTML=`<h3 class="text-3xl font-black">${r.t}</h3><p class="muted mt-1 mb-4">${r.s}</p><div class="space-y-2.5">${r.pts.map(p=>`<div class="flex gap-2 text-sm"><i class="fa-solid fa-check text-emerald-400 mt-0.5"></i> <span class="muted">${p}</span></div>`).join('')}</div>`;
+    tx.classList.remove('fade-in');void tx.offsetWidth;tx.classList.add('fade-in');
+    const mk=document.getElementById('roleMock');mk.innerHTML=r.mock;mk.classList.remove('fade-in');void mk.offsetWidth;mk.classList.add('fade-in');
+    document.querySelectorAll('.rolebtn').forEach(b=>b.style.background=b.dataset.role===k?'rgba(99,102,241,.32)':'');
+}
+document.querySelectorAll('.rolebtn').forEach(b=>b.onclick=()=>showRole(b.dataset.role));
+showRole('staff');
+
+/* WHY US — v5 TCO logic (relative, honest) */
+function drawTco(){
+    const withExtra=document.getElementById('tcoToggle').checked;
+    const comps=[['Canvas / Blackboard',70],['D2L / Schoology',55],['Moodle (self-host)',20],['AI Genesis',85]];
+    const extra=withExtra?90:0,max=180;
+    const wrap=document.getElementById('tcoBars');wrap.innerHTML='';
+    comps.forEach((c,i)=>{
+        const ours=c[0]==='AI Genesis',total=ours?c[1]:c[1]+extra,pct=Math.min(100,(total/max)*100);
+        const row=document.createElement('div');
+        row.innerHTML=`<div class="flex items-center justify-between mb-1"><span class="text-sm font-bold ${ours?'text-indigo-400':'muted'}">${c[0]}${ours?' <span class="chip" style="background:rgba(52,211,153,.2);color:#34d399;font-size:9px;padding:1px 6px">all-in</span>':''}</span><span class="text-[11px] faint">${withExtra&&!ours?'+build+grade':''}</span></div><div class="barwrap"><div class="bar" style="background:${ours?'linear-gradient(90deg,#6366f1,#3b82f6)':'linear-gradient(90deg,#94a3b8,#64748b)'}"></div></div>`;
+        wrap.appendChild(row);const bar=row.querySelector('.bar');requestAnimationFrame(()=>setTimeout(()=>bar.style.width=pct+'%',70*i));
+    });
+}
+drawTco();
+
+/* PRICING pools — accurate credit costs (config.py weights) */
+const POOLS={
+ content:{c:'teal',t:'Course Content credits',d:'Everything that builds a course, except slides.',
+   rows:[['Module list','per course','3'],['Lesson outline','per module','4'],['Lesson content','per section','10'],['Exam items','per section (5 MCQ)','6'],['Essay items','per section','6'],['Thumbnail','per image','4']],
+   note:'A typical 10-module × 6-section course ≈ <b>1,400 credits</b>.'},
+ slide:{c:'fuchsia',t:'Slide Deck credits',d:'AI presentation design plus background images.',
+   rows:[['Slide design','per section','11'],['Background image','per image','4']],
+   note:'Slides for one module ≈ <b>140 credits</b> (design + ~3 images/section).'},
+ cscbc:{c:'indigo',t:'CS &amp; CBC credits',d:'TESDA competency documents. 1 credit = 1 AI generation.',
+   rows:[['Elements / criteria','per unit','1'],['Range of variables','per unit','1'],['Evidence guide','per unit','1'],['Section 3 / job titles','per item','1']],
+   note:'A full CS ≈ <b>35–55 credits</b>; a full CBC ≈ <b>20–40</b>.'},
+ grading:{c:'amber',t:'Essay Grading credits',d:'Auto-grading of open-ended answers.',
+   rows:[['Essay answer','per answer','1'],['Activity answer','per answer','1'],['Code answer','per answer','1'],['Empty answer','—','FREE']],
+   note:'Out of credits? Answers wait for a teacher — students are <b>never blocked</b>.'},
+};
+function showPool(k){
+    const p=POOLS[k];
+    document.getElementById('poolBody').outerHTML=`<div id="poolBody" class="fade-in flex-1 flex flex-col">
+        <div class="flex items-center gap-3 mb-3"><div class="icon-box bg-${p.c}-500/20 text-${p.c}-400"><i class="fa-solid fa-coins"></i></div><div><h3 class="text-xl font-black">${p.t}</h3><p class="text-[11px] muted">${p.d}</p></div></div>
+        <div class="rounded-xl overflow-hidden" style="border:1px solid var(--glass-bd)">
+            <div class="grid grid-cols-[1.4fr_1.2fr_.6fr] text-[11px] font-black faint px-3 py-1.5" style="background:var(--card)"><span>Generation</span><span>Charged</span><span class="text-right">Credits</span></div>
+            ${p.rows.map((r,i)=>`<div class="grid grid-cols-[1.4fr_1.2fr_.6fr] text-[12px] px-3 py-1.5" style="${i%2?'background:var(--card)':''}"><span>${r[0]}</span><span class="muted">${r[1]}</span><span class="text-right font-black ${r[2]==='FREE'?'text-emerald-400':'text-'+p.c+'-400'}">${r[2]}</span></div>`).join('')}
+        </div>
+        <div class="rounded-xl bg-${p.c}-500/12 border border-${p.c}-400/25 p-3 mt-3 text-[12px]">${p.note}</div></div>`;
+    document.querySelectorAll('.pool').forEach(el=>el.style.borderColor=el.dataset.pool===k?'#818cf8':'');
+}
+document.querySelectorAll('.pool').forEach(el=>el.onclick=()=>showPool(el.dataset.pool));
+showPool('content');
+</script>
+</body>
+</html>

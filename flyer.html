@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Genesis — Flyer</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+    * { font-family:'Inter',sans-serif; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    body { background:#e2e8f0; margin:0; }
+    .page { width:210mm; min-height:297mm; background:#fff; margin:10px auto; position:relative; box-shadow:0 6px 30px rgba(2,6,23,.18); overflow:hidden; }
+    .pad { padding:14mm 13mm; }
+    .ink { color:#0f172a; }
+    .quiet { color:#64748b; }
+    .grad-hero { background:linear-gradient(140deg,#0f172a 0%,#1e3a5f 45%,#312e81 100%); }
+    .grad-band { background:linear-gradient(120deg,#4f46e5,#2563eb); }
+    .chip { display:inline-flex; align-items:center; gap:.35rem; padding:.3rem .65rem; border-radius:.55rem; font-size:.66rem; font-weight:700; }
+    .pill { display:inline-flex; align-items:center; gap:.4rem; padding:.28rem .65rem; border-radius:999px; font-size:.66rem; font-weight:700; }
+    .icon-box { height:2.3rem; width:2.3rem; border-radius:.75rem; display:flex; align-items:center; justify-content:center; }
+    .feat { border:1px solid #eef2f7; border-radius:.9rem; padding:.85rem .9rem; }
+    .card { border:1px solid #e5e7eb; border-radius:.9rem; }
+    .kpi { font-size:1.9rem; font-weight:900; line-height:1; }
+    .h-rule { height:4px; width:52px; border-radius:4px; background:#4f46e5; }
+    .check { color:#059669; } .cross { color:#e11d48; }
+    .foot-brand { position:absolute; bottom:7mm; left:13mm; font-size:.62rem; color:#94a3b8; font-weight:700; }
+    .foot-tag { position:absolute; bottom:7mm; right:13mm; font-size:.62rem; color:#94a3b8; font-weight:700; }
+    #toolbar { position:sticky; top:0; z-index:50; background:#0f172a; color:#fff; }
+    @media print {
+        body { background:#fff; }
+        #toolbar { display:none !important; }
+        .page { margin:0; box-shadow:none; width:auto; min-height:auto; page-break-after:always; }
+        .page:last-child { page-break-after:auto; }
+        @page { size:A4; margin:0; }
+    }
+</style>
+</head>
+<body>
+
+<div id="toolbar" class="flex items-center justify-between px-5 py-3">
+    <div class="flex items-center gap-2.5">
+        <div class="h-8 w-8 rounded-lg bg-indigo-500 flex items-center justify-center"><i class="fa-solid fa-graduation-cap text-white text-xs"></i></div>
+        <div>
+            <p class="text-sm font-black leading-none">AI Genesis — Flyer (front &amp; back)</p>
+            <p class="text-[10px] text-slate-400 mt-0.5">A4 · print double-sided or save as PDF</p>
+        </div>
+    </div>
+    <button onclick="window.print()" class="bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-bold px-4 py-2 rounded-xl flex items-center gap-2 transition"><i class="fa-solid fa-print"></i> Print / Save as PDF</button>
+</div>
+
+<!-- ══════════════ FRONT ══════════════ -->
+<section class="page grad-hero text-white">
+    <div class="absolute inset-0 opacity-15" style="background-image:radial-gradient(circle at 22% 78%,#6366f1,transparent 45%),radial-gradient(circle at 82% 18%,#3b82f6,transparent 45%);"></div>
+    <div class="pad relative flex flex-col" style="min-height:297mm;">
+        <!-- brand row -->
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="h-11 w-11 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center"><i class="fa-solid fa-graduation-cap text-white"></i></div>
+                <div>
+                    <p class="text-sm font-black tracking-tight leading-none">AI Genesis</p>
+                    <p class="text-[10px] text-slate-300 uppercase tracking-widest mt-1">Learning Management System</p>
+                </div>
+            </div>
+            <span class="pill bg-emerald-500/20 text-emerald-300 border border-emerald-400/30"><span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span> For TESDA TVIs &amp; Institutions</span>
+        </div>
+
+        <!-- headline -->
+        <div class="mt-14">
+            <div class="h-rule bg-indigo-400 mb-6"></div>
+            <h1 class="text-5xl font-black leading-[1.03] tracking-tight">Don't just host<br>your training —<br><span class="text-indigo-300">build it with AI.</span></h1>
+            <p class="text-base text-slate-300 mt-6 max-w-lg leading-relaxed">The all-in-one platform that generates your courses, exams, slides and TESDA competency documents, auto-grades student work, and issues verifiable certificates.</p>
+        </div>
+
+        <!-- highlight feature grid -->
+        <div class="grid grid-cols-2 gap-3 mt-9">
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-4">
+                <div class="icon-box bg-white/10 text-indigo-200 mb-2"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                <p class="font-bold text-sm">AI builds the content</p>
+                <p class="text-xs text-slate-400 mt-1">Courses, lessons, exams &amp; slides in minutes.</p>
+            </div>
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-4">
+                <div class="icon-box bg-white/10 text-blue-200 mb-2"><i class="fa-solid fa-file-contract"></i></div>
+                <p class="font-bold text-sm">TESDA CS &amp; CBC</p>
+                <p class="text-xs text-slate-400 mt-1">Formatted competency documents, generated.</p>
+            </div>
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-4">
+                <div class="icon-box bg-white/10 text-amber-200 mb-2"><i class="fa-solid fa-pen-ruler"></i></div>
+                <p class="font-bold text-sm">AI auto-grading</p>
+                <p class="text-xs text-slate-400 mt-1">Essays &amp; activities graded instantly, teacher-reviewed.</p>
+            </div>
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-4">
+                <div class="icon-box bg-white/10 text-emerald-200 mb-2"><i class="fa-solid fa-certificate"></i></div>
+                <p class="font-bold text-sm">Verifiable certificates</p>
+                <p class="text-xs text-slate-400 mt-1">Auto-issued with a scannable QR code.</p>
+            </div>
+        </div>
+
+        <!-- KPI strip -->
+        <div class="grid grid-cols-3 gap-4 border-t border-white/10 pt-6 mt-auto">
+            <div><p class="kpi text-white">Minutes</p><p class="text-[11px] text-slate-400 mt-1.5">to build a course</p></div>
+            <div><p class="kpi text-white">Every role</p><p class="text-[11px] text-slate-400 mt-1.5">staff · builders · teachers · students</p></div>
+            <div><p class="kpi text-white">Any device</p><p class="text-[11px] text-slate-400 mt-1.5">desktop, tablet &amp; phone</p></div>
+        </div>
+    </div>
+    <div class="foot-brand text-slate-500">AI Genesis</div>
+    <div class="foot-tag text-slate-500">Build. Teach. Assess. Certify.</div>
+</section>
+
+<!-- ══════════════ BACK ══════════════ -->
+<section class="page">
+    <div class="pad">
+        <!-- why us -->
+        <span class="chip bg-indigo-50 text-indigo-600 mb-3">WHY AI GENESIS</span>
+        <h2 class="text-2xl font-black ink leading-tight">Other platforms host content.<br><span class="text-indigo-600">We create it for you.</span></h2>
+        <div class="h-rule mt-4 mb-6"></div>
+
+        <!-- compact comparison -->
+        <div class="card overflow-hidden mb-7">
+            <div class="grid grid-cols-2 text-[13px]">
+                <div class="px-4 py-2.5 bg-slate-900 text-white font-black">Capability</div>
+                <div class="px-4 py-2.5 bg-slate-900 text-white font-black grid grid-cols-2"><span class="text-center">Typical LMS</span><span class="text-center text-indigo-300">AI Genesis</span></div>
+
+                <div class="px-4 py-2 text-slate-700 border-t border-slate-100">Course hosting &amp; enrollment</div>
+                <div class="px-4 py-2 border-t border-slate-100 grid grid-cols-2 text-center"><span class="check"><i class="fa-solid fa-check"></i></span><span class="check"><i class="fa-solid fa-check"></i></span></div>
+
+                <div class="px-4 py-2 text-slate-700 border-t border-slate-100 bg-slate-50/60">AI lesson &amp; exam generation</div>
+                <div class="px-4 py-2 border-t border-slate-100 bg-slate-50/60 grid grid-cols-2 text-center"><span class="cross"><i class="fa-solid fa-xmark"></i></span><span class="check"><i class="fa-solid fa-check"></i></span></div>
+
+                <div class="px-4 py-2 text-slate-700 border-t border-slate-100">AI slide-deck generation</div>
+                <div class="px-4 py-2 border-t border-slate-100 grid grid-cols-2 text-center"><span class="cross"><i class="fa-solid fa-xmark"></i></span><span class="check"><i class="fa-solid fa-check"></i></span></div>
+
+                <div class="px-4 py-2 text-slate-700 border-t border-slate-100 bg-slate-50/60">TESDA CS/CBC documents</div>
+                <div class="px-4 py-2 border-t border-slate-100 bg-slate-50/60 grid grid-cols-2 text-center"><span class="cross"><i class="fa-solid fa-xmark"></i></span><span class="check"><i class="fa-solid fa-check"></i></span></div>
+
+                <div class="px-4 py-2 text-slate-700 border-t border-slate-100">AI essay auto-grading</div>
+                <div class="px-4 py-2 border-t border-slate-100 grid grid-cols-2 text-center"><span class="cross"><i class="fa-solid fa-xmark"></i></span><span class="check"><i class="fa-solid fa-check"></i></span></div>
+            </div>
+        </div>
+
+        <!-- value: everything included -->
+        <div class="grad-band rounded-2xl p-5 text-white mb-7">
+            <div class="flex items-start gap-3">
+                <div class="icon-box bg-white/15 text-white shrink-0"><i class="fa-solid fa-box-open"></i></div>
+                <div>
+                    <p class="font-black text-base leading-tight">One subscription — the expensive part is included.</p>
+                    <p class="text-[13px] text-indigo-100 mt-1.5 leading-relaxed">Competitors charge for the platform only; the school still pays to build, update and grade content. With us, building, maintenance and grading are all built in — a lower true cost of ownership, and you launch this term.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- who it's for -->
+        <p class="text-[11px] font-black uppercase tracking-widest quiet mb-3">Built for everyone at your institution</p>
+        <div class="grid grid-cols-4 gap-3 mb-7">
+            <div class="feat text-center"><div class="icon-box bg-blue-100 text-blue-600 mx-auto mb-2"><i class="fa-solid fa-user-tie"></i></div><p class="font-bold text-xs ink">Staff</p><p class="text-[10px] quiet mt-0.5">Run the institution</p></div>
+            <div class="feat text-center"><div class="icon-box bg-violet-100 text-violet-600 mx-auto mb-2"><i class="fa-solid fa-pen-ruler"></i></div><p class="font-bold text-xs ink">Builders</p><p class="text-[10px] quiet mt-0.5">Create courses</p></div>
+            <div class="feat text-center"><div class="icon-box bg-emerald-100 text-emerald-600 mx-auto mb-2"><i class="fa-solid fa-chalkboard-user"></i></div><p class="font-bold text-xs ink">Teachers</p><p class="text-[10px] quiet mt-0.5">Guide &amp; assess</p></div>
+            <div class="feat text-center"><div class="icon-box bg-amber-100 text-amber-600 mx-auto mb-2"><i class="fa-solid fa-user-graduate"></i></div><p class="font-bold text-xs ink">Students</p><p class="text-[10px] quiet mt-0.5">Learn &amp; certify</p></div>
+        </div>
+
+        <!-- what's included quick list -->
+        <div class="card overflow-hidden mb-8">
+            <div class="grad-band px-5 py-2.5 text-white font-black text-[13px]">Every plan includes</div>
+            <div class="grid grid-cols-2 gap-x-6 gap-y-2 p-5 text-[13px] text-slate-700">
+                <div class="flex items-center gap-2"><i class="fa-solid fa-check check"></i> Platform &amp; cloud hosting</div>
+                <div class="flex items-center gap-2"><i class="fa-solid fa-check check"></i> AI course, exam &amp; slide generation</div>
+                <div class="flex items-center gap-2"><i class="fa-solid fa-check check"></i> TESDA CS &amp; CBC generators</div>
+                <div class="flex items-center gap-2"><i class="fa-solid fa-check check"></i> AI grading + teacher review</div>
+                <div class="flex items-center gap-2"><i class="fa-solid fa-check check"></i> Verifiable certificates</div>
+                <div class="flex items-center gap-2"><i class="fa-solid fa-check check"></i> Multi-section &amp; SIS API</div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="grad-hero rounded-2xl p-6 text-white relative overflow-hidden">
+            <div class="absolute inset-0 opacity-15" style="background-image:radial-gradient(circle at 80% 60%,#6366f1,transparent 45%);"></div>
+            <div class="relative flex items-center justify-between gap-6 flex-wrap">
+                <div>
+                    <p class="text-xl font-black leading-tight">Book a live demo &amp; get a tailored quote.</p>
+                    <p class="text-[13px] text-slate-300 mt-1.5">We'll build a sample course live and show it working with your qualifications.</p>
+                </div>
+                <div class="text-[13px] space-y-1.5 shrink-0">
+                    <div class="flex items-center gap-2.5"><i class="fa-solid fa-envelope w-4 text-indigo-300"></i> <span class="text-slate-200">[sales@your-company.com]</span></div>
+                    <div class="flex items-center gap-2.5"><i class="fa-solid fa-phone w-4 text-indigo-300"></i> <span class="text-slate-200">[+63 900 000 0000]</span></div>
+                    <div class="flex items-center gap-2.5"><i class="fa-solid fa-globe w-4 text-indigo-300"></i> <span class="text-slate-200">[www.your-company.com]</span></div>
+                </div>
+            </div>
+        </div>
+        <p class="text-[10px] quiet text-center mt-4">Pricing is prepared per institution and provided on request. Ask your representative for a written quote.</p>
+    </div>
+    <div class="foot-brand">AI Genesis</div>
+    <div class="foot-tag">Build. Teach. Assess. Certify.</div>
+</section>
+
+</body>
+</html>
