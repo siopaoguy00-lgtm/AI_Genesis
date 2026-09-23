@@ -24,8 +24,12 @@
     .kpi { font-size:1.9rem; font-weight:900; line-height:1; }
     .h-rule { height:4px; width:52px; border-radius:4px; background:#4f46e5; }
     .check { color:#059669; } .cross { color:#e11d48; }
-    .foot-brand { position:absolute; bottom:7mm; left:13mm; font-size:.62rem; color:#94a3b8; font-weight:700; }
+    .foot-brand { position:absolute; bottom:7mm; left:13mm; font-size:.72rem; color:#64748b; font-weight:900; letter-spacing:.02em; }
     .foot-tag { position:absolute; bottom:7mm; right:13mm; font-size:.62rem; color:#94a3b8; font-weight:700; }
+    /* prominent brand wordmark */
+    .brand-name { font-weight:900; letter-spacing:-.02em; line-height:1; }
+    .brand-ai { background:linear-gradient(90deg,#818cf8,#60a5fa); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .foot-brand .brand-ai { background:linear-gradient(90deg,#6366f1,#3b82f6); -webkit-background-clip:text; background-clip:text; color:transparent; }
     #toolbar { position:sticky; top:0; z-index:50; background:#0f172a; color:#fff; }
     @media print {
         body { background:#fff; }
@@ -56,20 +60,21 @@
         <!-- brand row -->
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="h-11 w-11 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center"><i class="fa-solid fa-graduation-cap text-white"></i></div>
+                <div class="h-14 w-14 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center"><i class="fa-solid fa-graduation-cap text-white text-xl"></i></div>
                 <div>
-                    <p class="text-sm font-black tracking-tight leading-none">AI Genesis</p>
-                    <p class="text-[10px] text-slate-300 uppercase tracking-widest mt-1">Learning Management System</p>
+                    <p class="brand-name text-2xl">AI <span class="brand-ai">Genesis</span></p>
+                    <p class="text-[10px] text-slate-300 uppercase tracking-widest mt-1.5">Learning Management System</p>
                 </div>
             </div>
             <span class="pill bg-emerald-500/20 text-emerald-300 border border-emerald-400/30"><span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span> For TESDA TVIs &amp; Institutions</span>
         </div>
 
         <!-- headline -->
-        <div class="mt-14">
-            <div class="h-rule bg-indigo-400 mb-6"></div>
-            <h1 class="text-5xl font-black leading-[1.03] tracking-tight">Don't just host<br>your training —<br><span class="text-indigo-300">build it with AI.</span></h1>
-            <p class="text-base text-slate-300 mt-6 max-w-lg leading-relaxed">The all-in-one platform that generates your courses, exams, slides and TESDA competency documents, auto-grades student work, and issues verifiable certificates.</p>
+        <div class="mt-12">
+            <div class="h-rule bg-indigo-400 mb-5"></div>
+            <p class="brand-name text-6xl mb-4">AI <span class="brand-ai">Genesis</span></p>
+            <h1 class="text-4xl font-black leading-[1.05] tracking-tight text-slate-100">Don't just host your training —<br><span class="text-indigo-300">build it with AI.</span></h1>
+            <p class="text-base text-slate-300 mt-5 max-w-lg leading-relaxed">The all-in-one platform that generates your courses, exams, slides and TESDA competency documents, auto-grades student work, and issues verifiable certificates.</p>
         </div>
 
         <!-- highlight feature grid -->
@@ -103,7 +108,7 @@
             <div><p class="kpi text-white">Any device</p><p class="text-[11px] text-slate-400 mt-1.5">desktop, tablet &amp; phone</p></div>
         </div>
     </div>
-    <div class="foot-brand text-slate-500">AI Genesis</div>
+    <div class="foot-brand">AI <span class="brand-ai">Genesis</span></div>
     <div class="foot-tag text-slate-500">Build. Teach. Assess. Certify.</div>
 </section>
 
@@ -111,7 +116,7 @@
 <section class="page">
     <div class="pad">
         <!-- why us -->
-        <span class="chip bg-indigo-50 text-indigo-600 mb-3">WHY AI GENESIS</span>
+        <span class="chip bg-indigo-50 text-indigo-600 mb-3">WHY <span class="brand-ai" style="font-weight:900">AI GENESIS</span></span>
         <h2 class="text-2xl font-black ink leading-tight">Other platforms host content.<br><span class="text-indigo-600">We create it for you.</span></h2>
         <div class="h-rule mt-4 mb-6"></div>
 
@@ -190,7 +195,7 @@
         </div>
         <p class="text-[10px] quiet text-center mt-4">Pricing is prepared per institution and provided on request. Ask your representative for a written quote.</p>
     </div>
-    <div class="foot-brand">AI Genesis</div>
+    <div class="foot-brand">AI <span class="brand-ai">Genesis</span></div>
     <div class="foot-tag">Build. Teach. Assess. Certify.</div>
 </section>
 
